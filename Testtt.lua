@@ -1,2161 +1,2780 @@
-LocalPlayer = game:GetService("Players").LocalPlayer
-HWID = game:GetService("RbxAnalyticsService"):GetClientId()
+-- =====================================================
+-- RAGALIC CLIENT • FULL MOBILE EDITION
+-- 100% функций из оригинального файла
+-- =====================================================
 
-_hookfunction = function(index, callback)
-    getfenv()[index] = callback
-    getgenv()[index] = callback
-    return callback
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
+local Camera = Workspace.CurrentCamera
+local SoundService = game:GetService("SoundService")
+local PS = Players
+local RS = ReplicatedStorage
+local R = RunService
+
+-- =====================================================
+-- ЗАГРУЗКА БИБЛИОТЕКИ
+-- =====================================================
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+Library.ForceCheckbox = false
+
+-- =====================================================
+-- ОКНО
+-- =====================================================
+local Window = Library:CreateWindow({
+	Title = "Ragalic Mobile",
+	Footer = "Ragalic Mobile",
+	NotifySide = "Right",
+	ShowCustomCursor = true,
+})
+
+local Tabs = {
+	Defense = Window:AddTab("defense", "shield"),
+	Target = Window:AddTab("target", "crosshair"),
+	Grab = Window:AddTab("grab", "hand"),
+	Player = Window:AddTab("player", "user"),
+	Misc = Window:AddTab("misc", "layers"),
+	Build = Window:AddTab("build", "box"),
+	Fun = Window:AddTab("fun", "smile"),
+	Keybinds = Window:AddTab("keybinds", "keyboard"),
+	Notifications = Window:AddTab("notifications", "bell"),
+	Auras = Window:AddTab("auras", "sparkles"),
+	["UI Settings"] = Window:AddTab("UI Settings", "settings")
+}
+
+-- =====================================================
+-- УТИЛИТЫ
+-- =====================================================
+local function notify(title, content, duration)
+	Library:Notify({ Title = title or "Notification", Description = content or "", Time = duration or 5 })
 end
 
-_spoofresult = function(body)
-    return {
-        ["StatusMessage"] =  "OK";
-        ["Version"] = "HTTP/1.1";
-        ["HttpError"] = Enum.HttpError.OK;
-        ["StatusCode"] = 200;
-        ["Headers"] = {};
-        ["Body"] = body;
-    }
-end
-
-spoofed_urls = {
-    ["https://raw.githubusercontent.com/m1kp0/ftap/refs/heads/main/m1kp/ver.txt"] = _spoofresult('return "в™Ґ РЎР»Р°РґРѕСЃС‚СЂР°СЃС‚РёРµ в™Ґ"');
-    ["https://raw.githubusercontent.com/m1kp0/FTAP/refs/heads/main/m1kp/whitelist.lua"] = _spoofresult(('return {[%s] = "%s"}'):format(LocalPlayer.UserId, HWID));
-    ["https://raw.githubusercontent.com/m1kp0/libraries/refs/heads/main/m1kpe0_lime.lua"] = _spoofresult([[
-    for i,v in pairs(game.CoreGui:GetChildren()) do
-        if v.Name == "UiLib" then
-            v:Destroy()
-        end
-    end
-
-    local UiLib = Instance.new("ScreenGui")
-    UiLib.Name = "UiLib"
-    UiLib.Parent = game.CoreGui
-    UiLib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    local function getNextWindowPos()
-        local biggest = 0;
-        local ok = nil;
-        for i, v in pairs(UiLib:GetChildren()) do
-            if v.Position.X.Offset > biggest then
-                biggest = v.Position.X.Offset
-                ok = v;
-            end
-        end
-        if biggest == 0 then
-            biggest = biggest + 15;
-        else
-            biggest = biggest + ok.Size.X.Offset + 10;
-        end
-        
-        return biggest;
-    end
-
-    local Library = {}
-
-    function Library:Window(title)
-        local Top = Instance.new("Frame")
-        local UICorner = Instance.new("UICorner")
-        local Container = Instance.new("Frame")
-        local UIListLayout_2 = Instance.new("UIListLayout")
-        local Line = Instance.new("Frame")
-        local Title = Instance.new("TextLabel")
-        local Minimize = Instance.new("ImageButton")
-
-        Top.Name = "Top"
-        Top.Parent = UiLib
-        Top.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-        Top.BorderSizePixel = 0
-        Top.Position = UDim2.new(0, getNextWindowPos(), 0.01, 0)
-        Top.Size = UDim2.new(0, 204, 0, 28)
-        Top.Active = true
-        Top.Draggable = true
-    Top.BackgroundTransparency = 0.5
-
-        UICorner.CornerRadius = UDim.new(0, 4)
-        UICorner.Parent = Top
-
-        Container.Name = "Container"
-        Container.Parent = Top
-        Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Container.BackgroundTransparency = 1.000
-        Container.ClipsDescendants = true
-        Container.Position = UDim2.new(0, 0, 1, 0)
-        Container.Size = UDim2.new(0, 204, 0, 762)
-
-        UIListLayout_2.Parent = Container
-        UIListLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-
-        Line.Name = "Line"
-        Line.Parent = Top
-        Line.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        Line.BorderSizePixel = 0
-        Line.Position = UDim2.new(0, 0, 0.892857134, 0)
-        Line.Size = UDim2.new(0, 204, 0, 3)
-    Line.BackgroundTransparency = 1
-
-        Title.Name = "Title"
-        Title.Parent = Top
-        Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Title.BackgroundTransparency = 1.000
-        Title.Position = UDim2.new(0.0245098043, 0, 0.142857149, 0)
-        Title.Size = UDim2.new(0, 174, 0, 20)
-        Title.Font = Enum.Font.GothamSemibold
-        Title.Text = title
-        Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Title.TextScaled = true
-        Title.TextSize = 14.000
-        Title.TextWrapped = true
-        Title.TextXAlignment = Enum.TextXAlignment.Left
-
-        Minimize.Name = "Minimize"
-        Minimize.Parent = Top
-        Minimize.BackgroundTransparency = 1.000
-        Minimize.Position = UDim2.new(0.877451003, 0, 0, 0)
-        Minimize.Rotation = 90.000
-        Minimize.
-
-Size = UDim2.new(0, 25, 0, 25)
-        Minimize.ZIndex = 2
-        Minimize.Image = "rbxassetid://3926307971"
-        Minimize.ImageColor3 = Color3.fromRGB(0, 255, 102)
-        Minimize.ImageRectOffset = Vector2.new(764, 244)
-        Minimize.ImageRectSize = Vector2.new(36, 36)
-
-        local function UZVNGAL_fake_script() -- Minimize.Script 
-            local script = Instance.new('Script', Minimize)
-
-            script.Parent.MouseButton1Click:Connect(function()
-                if script.Parent.Parent.Container.Size == UDim2.new(0, 204,0, 762) then 
-                    game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
-                    game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(255, 0, 68)}):Play()
-                    script.Parent.Parent.Container:TweenSize(UDim2.new(0, 204,0, 0), "InOut", "Sine", 0.25, true)
-                    wait(0.25)
-                    script.Parent.Parent.Line.Visible = false
-                else
-                    game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 90}):Play();
-                    game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(0, 255, 102)}):Play()
-                    script.Parent.Parent.Container:TweenSize(UDim2.new(0, 204,0, 762), "InOut", "Sine", 0.2, true)
-                    script.Parent.Parent.Line.Visible = true
-                end
-            end)
-        end
-        coroutine.wrap(UZVNGAL_fake_script)()
-        
-        local Lib = {}
-        
-        function Lib:Button(name, callback)
-            local ButtonContainer = Instance.new("Frame")
-            local Button = Instance.new("TextButton")
-            local ButtonAni = Instance.new("Frame")
-            local UICorner_2 = Instance.new("UICorner")
-            local UIListLayout = Instance.new("UIListLayout")
-            local ButtonName = Instance.new("TextLabel")
-            
-            ButtonContainer.Name = "ButtonContainer"
-            ButtonContainer.Parent = Container
-            ButtonContainer.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-            ButtonContainer.BorderSizePixel = 0
-            ButtonContainer.Size = UDim2.new(0, 204, 0, 28)
-        ButtonContainer.BackgroundTransparency = 0.5
-            
-            Button.Name = "Button"
-            Button.Parent = ButtonContainer
-            Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            Button.BackgroundTransparency = 1.000
-            Button.Size = UDim2.new(0, 204, 0, 28)
-            Button.Font = Enum.Font.SourceSans
-            Button.Text = ""
-            Button.TextColor3 = Color3.fromRGB(0, 0, 0)
-            Button.TextSize = 14.000
-
-            Button.MouseButton1Click:Connect(function()
-                callback()
-            end)
-            
-            ButtonAni.Name = "ButtonAni"
-            ButtonAni.Parent = Button
-            ButtonAni.BackgroundColor3 = Color3.fromRGB(0, 255, 102)
-            ButtonAni.Position = UDim2.new(0.0245098043, 0, 0.0714285746, 0)
-            
-            UICorner_2.CornerRadius = UDim.new(0, 4)
-            UICorner_2.Parent = ButtonAni
-            
-            UIListLayout.Parent = Button
-            UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-            UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-            
-            ButtonName.Name = "ButtonName"
-            ButtonName.Parent = ButtonContainer
-            ButtonName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            ButtonName.BackgroundTransparency = 1.000
-            ButtonName.Position = UDim2.new(0.0245098043, 0, 0.142857149, 0)
-            ButtonName.Size = UDim2.new(0, 194, 0, 20)
-            ButtonName.ZIndex = 3
-            ButtonName.Font = Enum.Font.GothamSemibold
-            ButtonName.Text = na
-
-me
-            ButtonName.TextColor3 = Color3.fromRGB(255, 255, 255)
-            ButtonName.TextScaled = true
-            ButtonName.TextSize = 14.000
-            ButtonName.TextWrapped = true
-            
-            local function ZNVYM_fake_script() -- Button.Script 
-                local script = Instance.new('Script', Button)
-                
-                script.Parent.MouseButton1Click:Connect(function()
-                    script.Parent.ButtonAni:TweenSize(UDim2.new(0, 194,0, 24), 'InOut', "Sine", 0.3, true)
-                    wait(0.45)
-                    script.Parent.ButtonAni:TweenSize(UDim2.new(0, 0, 0, 0), "InOut", "Sine", 0.3, true)
-                end)
-            end
-            coroutine.wrap(ZNVYM_fake_script)()
-        end
-        
-        function Lib:Toggle(name, callback)
-            local ToggleContainer = Instance.new("Frame")
-            local ToggleName = Instance.new("TextLabel")
-            local Toggle = Instance.new("TextButton")
-            local UICorner_3 = Instance.new("UICorner")
-            local Off = Instance.new("ImageLabel")
-            local On = Instance.new("ImageLabel")
-            
-            ToggleContainer.Name = "ToggleContainer"
-            ToggleContainer.Parent = Container
-            ToggleContainer.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-            ToggleContainer.BorderSizePixel = 0
-            ToggleContainer.Size = UDim2.new(0, 204, 0, 30)
-        ToggleContainer.BackgroundTransparency = 0.5
-            
-            ToggleName.Name = "ToggleName"
-            ToggleName.Parent = ToggleContainer
-            ToggleName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            ToggleName.BackgroundTransparency = 1.000
-            ToggleName.Position = UDim2.new(0.0245098043, 0, 0.142857105, 0)
-            ToggleName.Size = UDim2.new(0, 169, 0, 20)
-            ToggleName.Font = Enum.Font.GothamSemibold
-            ToggleName.Text = name
-            ToggleName.TextColor3 = Color3.fromRGB(255, 255, 255)
-            ToggleName.TextScaled = true
-            ToggleName.TextSize = 14.000
-            ToggleName.TextWrapped = true
-            ToggleName.TextXAlignment = Enum.TextXAlignment.Left
-            
-            Toggle.Name = "Toggle"
-            Toggle.Parent = ToggleContainer
-            Toggle.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
-            Toggle.BorderColor3 = Color3.fromRGB(27, 42, 53)
-            Toggle.Position = UDim2.new(0.852941215, 0, 0.0666666627, 0)
-            Toggle.Size = UDim2.new(0, 25, 0, 23)
-            Toggle.AutoButtonColor = false
-            Toggle.Font = Enum.Font.SourceSans
-            Toggle.Text = ""
-            Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
-            Toggle.TextSize = 14.000
-        Toggle.BackgroundTransparency = 1
-            local Toggled = false
-            Toggle.MouseButton1Click:Connect(function()
-                if Toggled == false then
-                    Toggled = true
-                else
-                    Toggled = false
-                end
-                callback(Toggled)
-            end)
-            
-            UICorner_3.CornerRadius = UDim.new(0, 3)
-            UICorner_3.Parent = Toggle
-            
-            Off.Name = "Off"
-            Off.Parent = Toggle
-            Off.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            Off.BackgroundTransparency = 1.000
-            Off.Size = UDim2.new(0, 25, 0, 25)
-            Off.Image = "rbxassetid://3926305904"
-            Off.ImageColor3 = Color3.fromRGB(255, 0, 68)
-            Off.ImageRectOffset = Vector2.new(924, 724)
-            Off.ImageRectSize = Vector2.new(36, 36)
-            
-            On.Name = "On"
-            On.Parent = Toggle
-            On.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            On.BackgroundTransparency = 1.000
-            On.Size = UDim2.new(0, 25, 0, 25)
-            On.Visible = false
-            On.Image = "rbxassetid://3926305904"
-            On.ImageColor3 = Color3.fromRGB(0, 255, 102)
-            On.ImageRectOffset = Vector2.new(312, 4)
-            On.ImageRectSize = Vector2.new(
-
-24, 24)
-            
-            local function XLZZDX_fake_script() -- Toggle.Script 
-                local script = Instance.new('Script', Toggle)
-                
-                script.Parent.MouseButton1Click:Connect(function()
-                    if script.Parent.Off.Rotation == 0 then
-                        script.Parent.On.Rotation = 0
-                        game:GetService("TweenService"):Create(script.Parent.Off, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 360}):Play();
-                        wait(0.3)
-                        script.Parent.Off.Visible = false
-                        script.Parent.On.Visible = true
-                    else
-                        script.Parent.Off.Rotation = 0
-                        game:GetService("TweenService"):Create(script.Parent.On, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = -360}):Play();
-                        wait(0.3)
-                        script.Parent.On.Visible = false
-                        script.Parent.Off.Visible = true
-                    end
-                end)
-            end
-            coroutine.wrap(XLZZDX_fake_script)()
-        end
-        
-        return Lib
-        
-    end
-
-    return Library]]);
-    ["https://raw.githubusercontent.com/m1kp0/BetterOrion/refs/heads/main/Icons.lua"] = _spoofresult([[
-    return {
-        assets = {
-            ["lucide-accessibility"] = "rbxassetid://10709751939",
-            ["lucide-activity"] = "rbxassetid://10709752035",
-            ["lucide-air-vent"] = "rbxassetid://10709752131",
-            ["lucide-airplay"] = "rbxassetid://10709752254",
-            ["lucide-alarm-check"] = "rbxassetid://10709752405",
-            ["lucide-alarm-clock"] = "rbxassetid://10709752630",
-            ["lucide-alarm-clock-off"] = "rbxassetid://10709752508",
-            ["lucide-alarm-minus"] = "rbxassetid://10709752732",
-            ["lucide-alarm-plus"] = "rbxassetid://10709752825",
-            ["lucide-album"] = "rbxassetid://10709752906",
-            ["lucide-alert-circle"] = "rbxassetid://10709752996",
-            ["lucide-alert-octagon"] = "rbxassetid://10709753064",
-            ["lucide-alert-triangle"] = "rbxassetid://10709753149",
-            ["lucide-align-center"] = "rbxassetid://10709753570",
-            ["lucide-align-center-horizontal"] = "rbxassetid://10709753272",
-            ["lucide-align-center-vertical"] = "rbxassetid://10709753421",
-            ["lucide-align-end-horizontal"] = "rbxassetid://10709753692",
-            ["lucide-align-end-vertical"] = "rbxassetid://10709753808",
-            ["lucide-align-horizontal-distribute-center"] = "rbxassetid://10747779791",
-            ["lucide-align-horizontal-distribute-end"] = "rbxassetid://10747784534",
-            ["lucide-align-horizontal-distribute-start"] = "rbxassetid://10709754118",
-            ["lucide-align-horizontal-justify-center"] = "rbxassetid://10709754204",
-            ["lucide-align-horizontal-justify-end"] = "rbxassetid://10709754317",
-            ["lucide-align-horizontal-justify-start"] = "rbxassetid://10709754436",
-            ["lucide-align-horizontal-space-around"] = "rbxassetid://10709754590",
-            ["lucide-align-horizontal-space-between"] = "rbxassetid://10709754749",
-            ["lucide-align-justify"] = "rbxassetid://10709759610",
-            ["lucide-align-left"] = "rbxassetid://10709759764",
-            ["lucide-align-right"] = "rbxassetid://10709759895",
-            ["lucide-align-start-horizontal"] = "rbxassetid://10709760051",
-            ["lucide-align-start-vertical"] = "rbxassetid://10709760244",
-            ["lucide-align-vertical-distribute-center"] = "rbxassetid://10709760351",
-            ["lucide-align-vertical-distribute-end"] = "rbxassetid://10709760434",
-            ["lucide-align-vertical-distribute-start"] = "rbxassetid://10709760612",
-            ["lucide-align-vertical-justify-center"] = "rbxassetid://10709760814",
-            ["lucide-align-vertical-justify-end"] = "rbxassetid://10709761003",
-            ["lucide-align-vertical-justify-sta
-
-rt"] = "rbxassetid://10709761176",
-            ["lucide-align-vertical-space-around"] = "rbxassetid://10709761324",
-            ["lucide-align-vertical-space-between"] = "rbxassetid://10709761434",
-            ["lucide-anchor"] = "rbxassetid://10709761530",
-            ["lucide-angry"] = "rbxassetid://10709761629",
-            ["lucide-annoyed"] = "rbxassetid://10709761722",
-            ["lucide-aperture"] = "rbxassetid://10709761813",
-            ["lucide-apple"] = "rbxassetid://10709761889",
-            ["lucide-archive"] = "rbxassetid://10709762233",
-            ["lucide-archive-restore"] = "rbxassetid://10709762058",
-            ["lucide-armchair"] = "rbxassetid://10709762327",
-            ["lucide-arrow-big-down"] = "rbxassetid://10747796644",
-            ["lucide-arrow-big-left"] = "rbxassetid://10709762574",
-            ["lucide-arrow-big-right"] = "rbxassetid://10709762727",
-            ["lucide-arrow-big-up"] = "rbxassetid://10709762879",
-            ["lucide-arrow-down"] = "rbxassetid://10709767827",
-            ["lucide-arrow-down-circle"] = "rbxassetid://10709763034",
-            ["lucide-arrow-down-left"] = "rbxassetid://10709767656",
-            ["lucide-arrow-down-right"] = "rbxassetid://10709767750",
-            ["lucide-arrow-left"] = "rbxassetid://10709768114",
-            ["lucide-arrow-left-circle"] = "rbxassetid://10709767936",
-            ["lucide-arrow-left-right"] = "rbxassetid://10709768019",
-            ["lucide-arrow-right"] = "rbxassetid://10709768347",
-            ["lucide-arrow-right-circle"] = "rbxassetid://10709768226",
-            ["lucide-arrow-up"] = "rbxassetid://10709768939",
-            ["lucide-arrow-up-circle"] = "rbxassetid://10709768432",
-            ["lucide-arrow-up-down"] = "rbxassetid://10709768538",
-            ["lucide-arrow-up-left"] = "rbxassetid://10709768661",
-            ["lucide-arrow-up-right"] = "rbxassetid://10709768787",
-            ["lucide-asterisk"] = "rbxassetid://10709769095",
-            ["lucide-at-sign"] = "rbxassetid://10709769286",
-            ["lucide-award"] = "rbxassetid://10709769406",
-            ["lucide-axe"] = "rbxassetid://10709769508",
-            ["lucide-axis-3d"] = "rbxassetid://10709769598",
-            ["lucide-baby"] = "rbxassetid://10709769732",
-            ["lucide-backpack"] = "rbxassetid://10709769841",
-            ["lucide-baggage-claim"] = "rbxassetid://10709769935",
-            ["lucide-banana"] = "rbxassetid://10709770005",
-            ["lucide-banknote"] = "rbxassetid://10709770178",
-            ["lucide-bar-chart"] = "rbxassetid://10709773755",
-            ["lucide-bar-chart-2"] = "rbxassetid://10709770317",
-            ["lucide-bar-chart-3"] = "rbxassetid://10709770431",
-            ["lucide-bar-chart-4"] = "rbxassetid://10709770560",
-            ["lucide-bar-chart-horizontal"] = "rbxassetid://10709773669",
-            ["lucide-barcode"] = "rbxassetid://10747360675",
-            ["lucide-baseline"] = "rbxassetid://10709773863",
-            ["lucide-bath"] = "rbxassetid://10709773963",
-            ["lucide-battery"] = "rbxassetid://10709774640",
-            ["lucide-battery-charging"] = "rbxassetid://10709774068",
-            ["lucide-battery-full"] = "rbxassetid://10709774206",
-            ["lucide-battery-low"] = "rbxassetid://10709774370",
-            ["lucide-battery-medium"] = "rbxassetid://10709774513",
-            ["lucide-beaker"] = "rbxassetid://10709774756",
-            ["lucide-bed"] = "rbxassetid://10709775036",
-            ["lucide-bed-double"] = "rbxassetid://10709774864",
-            ["lucide-bed-single"] = "rbxassetid://10709774968",
-            ["lucide-beer"] = "rbxassetid://10709775167",
-            ["lucide-bell"] = "rbxassetid://10709775704",
-            ["lucide-bell-minus"] = "rbxassetid://10709775241",
-            ["lucide-bell-off"] = "rbxassetid://10709775320",
-            ["lucide-bell-plus"] = "rbxassetid://10709775448",
-            ["lucide-bell-ring"] = "rbxassetid://10709775560",
-            ["lucide-bike"] = "rbxassetid://10709775894",
-            ["lucide-binary"] = "rbxassetid://10709776050",
-
-["lucide-bitcoin"] = "rbxassetid://10709776126",
-            ["lucide-bluetooth"] = "rbxassetid://10709776655",
-            ["lucide-bluetooth-connected"] = "rbxassetid://10709776240",
-            ["lucide-bluetooth-off"] = "rbxassetid://10709776344",
-            ["lucide-bluetooth-searching"] = "rbxassetid://10709776501",
-            ["lucide-bold"] = "rbxassetid://10747813908",
-            ["lucide-bomb"] = "rbxassetid://10709781460",
-            ["lucide-bone"] = "rbxassetid://10709781605",
-            ["lucide-book"] = "rbxassetid://10709781824",
-            ["lucide-book-open"] = "rbxassetid://10709781717",
-            ["lucide-bookmark"] = "rbxassetid://10709782154",
-            ["lucide-bookmark-minus"] = "rbxassetid://10709781919",
-            ["lucide-bookmark-plus"] = "rbxassetid://10709782044",
-            ["lucide-bot"] = "rbxassetid://10709782230",
-            ["lucide-box"] = "rbxassetid://10709782497",
-            ["lucide-box-select"] = "rbxassetid://10709782342",
-            ["lucide-boxes"] = "rbxassetid://10709782582",
-            ["lucide-briefcase"] = "rbxassetid://10709782662",
-            ["lucide-brush"] = "rbxassetid://10709782758",
-            ["lucide-bug"] = "rbxassetid://10709782845",
-            ["lucide-building"] = "rbxassetid://10709783051",
-            ["lucide-building-2"] = "rbxassetid://10709782939",
-            ["lucide-bus"] = "rbxassetid://10709783137",
-            ["lucide-cake"] = "rbxassetid://10709783217",
-            ["lucide-calculator"] = "rbxassetid://10709783311",
-            ["lucide-calendar"] = "rbxassetid://10709789505",
-            ["lucide-calendar-check"] = "rbxassetid://10709783474",
-            ["lucide-calendar-check-2"] = "rbxassetid://10709783392",
-            ["lucide-calendar-clock"] = "rbxassetid://10709783577",
-            ["lucide-calendar-days"] = "rbxassetid://10709783673",
-            ["lucide-calendar-heart"] = "rbxassetid://10709783835",
-            ["lucide-calendar-minus"] = "rbxassetid://10709783959",
-            ["lucide-calendar-off"] = "rbxassetid://10709788784",
-            ["lucide-calendar-plus"] = "rbxassetid://10709788937",
-            ["lucide-calendar-range"] = "rbxassetid://10709789053",
-            ["lucide-calendar-search"] = "rbxassetid://10709789200",
-            ["lucide-calendar-x"] = "rbxassetid://10709789407",
-            ["lucide-calendar-x-2"] = "rbxassetid://10709789329",
-            ["lucide-camera"] = "rbxassetid://10709789686",
-            ["lucide-camera-off"] = "rbxassetid://10747822677",
-            ["lucide-car"] = "rbxassetid://10709789810",
-            ["lucide-carrot"] = "rbxassetid://10709789960",
-            ["lucide-cast"] = "rbxassetid://10709790097",
-            ["lucide-charge"] = "rbxassetid://10709790202",
-            ["lucide-check"] = "rbxassetid://10709790644",
-            ["lucide-check-circle"] = "rbxassetid://10709790387",
-            ["lucide-check-circle-2"] = "rbxassetid://10709790298",
-            ["lucide-check-square"] = "rbxassetid://10709790537",
-            ["lucide-chef-hat"] = "rbxassetid://10709790757",
-            ["lucide-cherry"] = "rbxassetid://10709790875",
-            ["lucide-chevron-down"] = "rbxassetid://10709790948",
-            ["lucide-chevron-first"] = "rbxassetid://10709791015",
-            ["lucide-chevron-last"] = "rbxassetid://10709791130",
-            ["lucide-chevron-left"] = "rbxassetid://10709791281",
-            ["lucide-chevron-right"] = "rbxassetid://10709791437",
-            ["lucide-chevron-up"] = "rbxassetid://10709791523",
-            ["lucide-chevrons-down"] = "rbxassetid://10709796864",
-            ["lucide-chevrons-down-up"] = "rbxassetid://10709791632",
-            ["lucide-chevrons-left"] = "rbxassetid://10709797151",
-            ["lucide-chevrons-left-right"] = "rbxassetid://10709797006",
-            ["lucide-chevrons-right"] = "rbxassetid://10709797382",
-            ["lucide-chevrons-right-left"] = "rbxassetid://10709797274",
-            ["lucide-chevrons-up"] = "rbxassetid://10709797622",
-            ["lucide-chevrons-up-down"] = "rbxassetid://10
-
-709797508",
-            ["lucide-chrome"] = "rbxassetid://10709797725",
-            ["lucide-circle"] = "rbxassetid://10709798174",
-            ["lucide-circle-dot"] = "rbxassetid://10709797837",
-            ["lucide-circle-ellipsis"] = "rbxassetid://10709797985",
-            ["lucide-circle-slashed"] = "rbxassetid://10709798100",
-            ["lucide-citrus"] = "rbxassetid://10709798276",
-            ["lucide-clapperboard"] = "rbxassetid://10709798350",
-            ["lucide-clipboard"] = "rbxassetid://10709799288",
-            ["lucide-clipboard-check"] = "rbxassetid://10709798443",
-            ["lucide-clipboard-copy"] = "rbxassetid://10709798574",
-            ["lucide-clipboard-edit"] = "rbxassetid://10709798682",
-            ["lucide-clipboard-list"] = "rbxassetid://10709798792",
-            ["lucide-clipboard-signature"] = "rbxassetid://10709798890",
-            ["lucide-clipboard-type"] = "rbxassetid://10709798999",
-            ["lucide-clipboard-x"] = "rbxassetid://10709799124",
-            ["lucide-clock"] = "rbxassetid://10709805144",
-            ["lucide-clock-1"] = "rbxassetid://10709799535",
-            ["lucide-clock-10"] = "rbxassetid://10709799718",
-            ["lucide-clock-11"] = "rbxassetid://10709799818",
-            ["lucide-clock-12"] = "rbxassetid://10709799962",
-            ["lucide-clock-2"] = "rbxassetid://10709803876",
-            ["lucide-clock-3"] = "rbxassetid://10709803989",
-            ["lucide-clock-4"] = "rbxassetid://10709804164",
-            ["lucide-clock-5"] = "rbxassetid://10709804291",
-            ["lucide-clock-6"] = "rbxassetid://10709804435",
-            ["lucide-clock-7"] = "rbxassetid://10709804599",
-            ["lucide-clock-8"] = "rbxassetid://10709804784",
-            ["lucide-clock-9"] = "rbxassetid://10709804996",
-            ["lucide-cloud"] = "rbxassetid://10709806740",
-            ["lucide-cloud-cog"] = "rbxassetid://10709805262",
-            ["lucide-cloud-drizzle"] = "rbxassetid://10709805371",
-            ["lucide-cloud-fog"] = "rbxassetid://10709805477",
-            ["lucide-cloud-hail"] = "rbxassetid://10709805596",
-            ["lucide-cloud-lightning"] = "rbxassetid://10709805727",
-            ["lucide-cloud-moon"] = "rbxassetid://10709805942",
-            ["lucide-cloud-moon-rain"] = "rbxassetid://10709805838",
-            ["lucide-cloud-off"] = "rbxassetid://10709806060",
-            ["lucide-cloud-rain"] = "rbxassetid://10709806277",
-            ["lucide-cloud-rain-wind"] = "rbxassetid://10709806166",
-            ["lucide-cloud-snow"] = "rbxassetid://10709806374",
-            ["lucide-cloud-sun"] = "rbxassetid://10709806631",
-            ["lucide-cloud-sun-rain"] = "rbxassetid://10709806475",
-            ["lucide-cloudy"] = "rbxassetid://10709806859",
-            ["lucide-clover"] = "rbxassetid://10709806995",
-            ["lucide-code"] = "rbxassetid://10709810463",
-            ["lucide-code-2"] = "rbxassetid://10709807111",
-            ["lucide-codepen"] = "rbxassetid://10709810534",
-            ["lucide-codesandbox"] = "rbxassetid://10709810676",
-            ["lucide-coffee"] = "rbxassetid://10709810814",
-            ["lucide-cog"] = "rbxassetid://10709810948",
-            ["lucide-coins"] = "rbxassetid://10709811110",
-            ["lucide-columns"] = "rbxassetid://10709811261",
-            ["lucide-command"] = "rbxassetid://10709811365",
-            ["lucide-compass"] = "rbxassetid://10709811445",
-            ["lucide-component"] = "rbxassetid://10709811595",
-            ["lucide-concierge-bell"] = "rbxassetid://10709811706",
-            ["lucide-connection"] = "rbxassetid://10747361219",
-            ["lucide-contact"] = "rbxassetid://10709811834",
-            ["lucide-contrast"] = "rbxassetid://10709811939",
-            ["lucide-cookie"] = "rbxassetid://10709812067",
-            ["lucide-copy"] = "rbxassetid://10709812159",
-            ["lucide-copyleft"] = "rbxassetid://10709812251",
-            ["lucide-copyright"] = "rbxassetid://10709812311",
-            ["lucide-corner-down-left"] = "rbxassetid://10709812396",
-            ["lucide-corner-down-right
-
-"] = "rbxassetid://10709812485",
-            ["lucide-corner-left-down"] = "rbxassetid://10709812632",
-            ["lucide-corner-left-up"] = "rbxassetid://10709812784",
-            ["lucide-corner-right-down"] = "rbxassetid://10709812939",
-            ["lucide-corner-right-up"] = "rbxassetid://10709813094",
-            ["lucide-corner-up-left"] = "rbxassetid://10709813185",
-            ["lucide-corner-up-right"] = "rbxassetid://10709813281",
-            ["lucide-cpu"] = "rbxassetid://10709813383",
-            ["lucide-croissant"] = "rbxassetid://10709818125",
-            ["lucide-crop"] = "rbxassetid://10709818245",
-            ["lucide-cross"] = "rbxassetid://10709818399",
-            ["lucide-crosshair"] = "rbxassetid://10709818534",
-            ["lucide-crown"] = "rbxassetid://10709818626",
-            ["lucide-cup-soda"] = "rbxassetid://10709818763",
-            ["lucide-curly-braces"] = "rbxassetid://10709818847",
-            ["lucide-currency"] = "rbxassetid://10709818931",
-            ["lucide-database"] = "rbxassetid://10709818996",
-            ["lucide-delete"] = "rbxassetid://10709819059",
-            ["lucide-diamond"] = "rbxassetid://10709819149",
-            ["lucide-dice-1"] = "rbxassetid://10709819266",
-            ["lucide-dice-2"] = "rbxassetid://10709819361",
-            ["lucide-dice-3"] = "rbxassetid://10709819508",
-            ["lucide-dice-4"] = "rbxassetid://10709819670",
-            ["lucide-dice-5"] = "rbxassetid://10709819801",
-            ["lucide-dice-6"] = "rbxassetid://10709819896",
-            ["lucide-dices"] = "rbxassetid://10723343321",
-            ["lucide-diff"] = "rbxassetid://10723343416",
-            ["lucide-disc"] = "rbxassetid://10723343537",
-            ["lucide-divide"] = "rbxassetid://10723343805",
-            ["lucide-divide-circle"] = "rbxassetid://10723343636",
-            ["lucide-divide-square"] = "rbxassetid://10723343737",
-            ["lucide-dollar-sign"] = "rbxassetid://10723343958",
-            ["lucide-download"] = "rbxassetid://10723344270",
-            ["lucide-download-cloud"] = "rbxassetid://10723344088",
-            ["lucide-droplet"] = "rbxassetid://10723344432",
-            ["lucide-droplets"] = "rbxassetid://10734883356",
-            ["lucide-drumstick"] = "rbxassetid://10723344737",
-            ["lucide-edit"] = "rbxassetid://10734883598",
-            ["lucide-edit-2"] = "rbxassetid://10723344885",
-            ["lucide-edit-3"] = "rbxassetid://10723345088",
-            ["lucide-egg"] = "rbxassetid://10723345518",
-            ["lucide-egg-fried"] = "rbxassetid://10723345347",
-            ["lucide-electricity"] = "rbxassetid://10723345749",
-            ["lucide-electricity-off"] = "rbxassetid://10723345643",
-            ["lucide-equal"] = "rbxassetid://10723345990",
-            ["lucide-equal-not"] = "rbxassetid://10723345866",
-            ["lucide-eraser"] = "rbxassetid://10723346158",
-            ["lucide-euro"] = "rbxassetid://10723346372",
-            ["lucide-expand"] = "rbxassetid://10723346553",
-            ["lucide-external-link"] = "rbxassetid://10723346684",
-            ["lucide-eye"] = "rbxassetid://10723346959",
-            ["lucide-eye-off"] = "rbxassetid://10723346871",
-            ["lucide-factory"] = "rbxassetid://10723347051",
-            ["lucide-fan"] = "rbxassetid://10723354359",
-            ["lucide-fast-forward"] = "rbxassetid://10723354521",
-            ["lucide-feather"] = "rbxassetid://10723354671",
-            ["lucide-figma"] = "rbxassetid://10723354801",
-            ["lucide-file"] = "rbxassetid://10723374641",
-            ["lucide-file-archive"] = "rbxassetid://10723354921",
-            ["lucide-file-audio"] = "rbxassetid://10723355148",
-            ["lucide-file-audio-2"] = "rbxassetid://10723355026",
-            ["lucide-file-axis-3d"] = "rbxassetid://10723355272",
-            ["lucide-file-badge"] = "rbxassetid://10723355622",
-            ["lucide-file-badge-2"] = "rbxassetid://10723355451",
-            ["lucide-file-bar-chart"] = "rbxassetid://10723355887",
-            ["lucide-file-bar-chart-2"] = "rbxassetid://10723355746
-
-",
-            ["lucide-file-box"] = "rbxassetid://10723355989",
-            ["lucide-file-check"] = "rbxassetid://10723356210",
-            ["lucide-file-check-2"] = "rbxassetid://10723356100",
-            ["lucide-file-clock"] = "rbxassetid://10723356329",
-            ["lucide-file-code"] = "rbxassetid://10723356507",
-            ["lucide-file-cog"] = "rbxassetid://10723356830",
-            ["lucide-file-cog-2"] = "rbxassetid://10723356676",
-            ["lucide-file-diff"] = "rbxassetid://10723357039",
-            ["lucide-file-digit"] = "rbxassetid://10723357151",
-            ["lucide-file-down"] = "rbxassetid://10723357322",
-            ["lucide-file-edit"] = "rbxassetid://10723357495",
-            ["lucide-file-heart"] = "rbxassetid://10723357637",
-            ["lucide-file-image"] = "rbxassetid://10723357790",
-            ["lucide-file-input"] = "rbxassetid://10723357933",
-            ["lucide-file-json"] = "rbxassetid://10723364435",
-            ["lucide-file-json-2"] = "rbxassetid://10723364361",
-            ["lucide-file-key"] = "rbxassetid://10723364605",
-            ["lucide-file-key-2"] = "rbxassetid://10723364515",
-            ["lucide-file-line-chart"] = "rbxassetid://10723364725",
-            ["lucide-file-lock"] = "rbxassetid://10723364957",
-            ["lucide-file-lock-2"] = "rbxassetid://10723364861",
-            ["lucide-file-minus"] = "rbxassetid://10723365254",
-            ["lucide-file-minus-2"] = "rbxassetid://10723365086",
-            ["lucide-file-output"] = "rbxassetid://10723365457",
-            ["lucide-file-pie-chart"] = "rbxassetid://10723365598",
-            ["lucide-file-plus"] = "rbxassetid://10723365877",
-            ["lucide-file-plus-2"] = "rbxassetid://10723365766",
-            ["lucide-file-question"] = "rbxassetid://10723365987",
-            ["lucide-file-scan"] = "rbxassetid://10723366167",
-            ["lucide-file-search"] = "rbxassetid://10723366550",
-            ["lucide-file-search-2"] = "rbxassetid://10723366340",
-            ["lucide-file-signature"] = "rbxassetid://10723366741",
-            ["lucide-file-spreadsheet"] = "rbxassetid://10723366962",
-            ["lucide-file-symlink"] = "rbxassetid://10723367098",
-            ["lucide-file-terminal"] = "rbxassetid://10723367244",
-            ["lucide-file-text"] = "rbxassetid://10723367380",
-            ["lucide-file-type"] = "rbxassetid://10723367606",
-            ["lucide-file-type-2"] = "rbxassetid://10723367509",
-            ["lucide-file-up"] = "rbxassetid://10723367734",
-            ["lucide-file-video"] = "rbxassetid://10723373884",
-            ["lucide-file-video-2"] = "rbxassetid://10723367834",
-            ["lucide-file-volume"] = "rbxassetid://10723374172",
-            ["lucide-file-volume-2"] = "rbxassetid://10723374030",
-            ["lucide-file-warning"] = "rbxassetid://10723374276",
-            ["lucide-file-x"] = "rbxassetid://10723374544",
-            ["lucide-file-x-2"] = "rbxassetid://10723374378",
-            ["lucide-files"] = "rbxassetid://10723374759",
-            ["lucide-film"] = "rbxassetid://10723374981",
-            ["lucide-filter"] = "rbxassetid://10723375128",
-            ["lucide-fingerprint"] = "rbxassetid://10723375250",
-            ["lucide-flag"] = "rbxassetid://10723375890",
-            ["lucide-flag-off"] = "rbxassetid://10723375443",
-            ["lucide-flag-triangle-left"] = "rbxassetid://10723375608",
-            ["lucide-flag-triangle-right"] = "rbxassetid://10723375727",
-            ["lucide-flame"] = "rbxassetid://10723376114",
-            ["lucide-flashlight"] = "rbxassetid://10723376471",
-            ["lucide-flashlight-off"] = "rbxassetid://10723376365",
-            ["lucide-flask-conical"] = "rbxassetid://10734883986",
-            ["lucide-flask-round"] = "rbxassetid://10723376614",
-            ["lucide-flip-horizontal"] = "rbxassetid://10723376884",
-            ["lucide-flip-horizontal-2"] = "rbxassetid://10723376745",
-            ["lucide-flip-vertical"] = "rbxassetid://10723377138",
-            ["lucide-flip-vertical-2"] = "rbxassetid://10723377026",
-            ["lucide-flower"] = "rbxassetid://10747830374",
-            ["lucide-flower-2"] = "rbxassetid://10723377305",
-            ["lucide-focus"] = "rbxassetid://10723377537",
-            ["lucide-folder"] = "rbxassetid://10723387563",
-            ["lucide-folder-archive"] = "rbxassetid://10723384478",
-            ["lucide-folder-check"] = "rbxassetid://10723384605",
-            ["lucide-folder-clock"] = "rbxassetid://10723384731",
-            ["lucide-folder-closed"] = "rbxassetid://10723384893",
-            ["lucide-folder-cog"] = "rbxassetid://10723385213",
-            ["lucide-folder-cog-2"] = "rbxassetid://10723385036",
-            ["lucide-folder-down"] = "rbxassetid://10723385338",
-            ["lucide-folder-edit"] = "rbxassetid://10723385445",
-            ["lucide-folder-heart"] = "rbxassetid://10723385545",
-            ["lucide-folder-input"] = "rbxassetid://10723385721",
-            ["lucide-folder-key"] = "rbxassetid://10723385848",
-            ["lucide-folder-lock"] = "rbxassetid://10723386005",
-            ["lucide-folder-minus"] = "rbxassetid://10723386127",
-            ["lucide-folder-open"] = "rbxassetid://10723386277",
-            ["lucide-folder-output"] = "rbxassetid://10723386386",
-            ["lucide-folder-plus"] = "rbxassetid://10723386531",
-            ["lucide-folder-search"] = "rbxassetid://10723386787",
-            ["lucide-folder-search-2"] = "rbxassetid://10723386674",
-            ["lucide-folder-symlink"] = "rbxassetid://10723386930",
-            ["lucide-folder-tree"] = "rbxassetid://10723387085",
-            ["lucide-folder-up"] = "rbxassetid://10723387265",
-            ["lucide-folder-x"] = "rbxassetid://10723387448",
-            ["lucide-folders"] = "rbxassetid://10723387721",
-            ["lucide-form-input"] = "rbxassetid://10723387841",
-            ["lucide-forward"] = "rbxassetid://10723388016",
-            ["lucide-frame"] = "rbxassetid://10723394389",
-            ["lucide-framer"] = "rbxassetid://10723394565",
-            ["lucide-frown"] = "rbxassetid://10723394681",
-            ["lucide-fuel"] = "rbxassetid://10723394846",
-            ["lucide-function-square"] = "rbxassetid://10723395041",
-            ["lucide-gamepad"] = "rbxassetid://10723395457",
-            ["lucide-gamepad-2"] = "rbxassetid://10723395215",
-            ["lucide-gauge"] = "rbxassetid://10723395708",
-            ["lucide-gavel"] = "rbxassetid://10723395896",
-            ["lucide-gem"] = "rbxassetid://10723396000",
-            ["lucide-ghost"] = "rbxassetid://10723396107",
-            ["lucide-gift"] = "rbxassetid://10723396402",
-            ["lucide-gift-card"] = "rbxassetid://10723396225",
-            ["lucide-git-branch"] = "rbxassetid://10723396676",
-            ["lucide-git-branch-plus"] = "rbxassetid://10723396542",
-            ["lucide-git-commit"] = "rbxassetid://10723396812",
-            ["lucide-git-compare"] = "rbxassetid://10723396954",
-            ["lucide-git-fork"] = "rbxassetid://10723397049",
-            ["lucide-git-merge"] = "rbxassetid://10723397165",
-            ["lucide-git-pull-request"] = "rbxassetid://10723397431",
-            ["lucide-git-pull-request-closed"] = "rbxassetid://10723397268",
-            ["lucide-git-pull-request-draft"] = "rbxassetid://10734884302",
-            ["lucide-glass"] = "rbxassetid://10723397788",
-            ["lucide-glass-2"] = "rbxassetid://10723397529",
-            ["lucide-glass-water"] = "rbxassetid://10723397678",
-            ["lucide-glasses"] = "rbxassetid://10723397895",
-            ["lucide-globe"] = "rbxassetid://10723404337",
-            ["lucide-globe-2"] = "rbxassetid://10723398002",
-            ["lucide-grab"] = "rbxassetid://10723404472",
-            ["lucide-graduation-cap"] = "rbxassetid://10723404691",
-            ["lucide-grape"] = "rbxassetid://10723404822",
-            ["lucide-grid"] = "rbxassetid://10723404936",
-            ["lucide-grip-horizontal"] = "rbxassetid://10723405089",
-            ["lucide-grip-vertical"] = "rbxassetid://10723405236",
-            ["lucide-hammer"] = "rbxassetid://10723405360",
-            ["lucide-hand"] = "rbxassetid://1
-
-0723405649",
-            ["lucide-hand-metal"] = "rbxassetid://10723405508",
-            ["lucide-hard-drive"] = "rbxassetid://10723405749",
-            ["lucide-hard-hat"] = "rbxassetid://10723405859",
-            ["lucide-hash"] = "rbxassetid://10723405975",
-            ["lucide-haze"] = "rbxassetid://10723406078",
-            ["lucide-headphones"] = "rbxassetid://10723406165",
-            ["lucide-heart"] = "rbxassetid://10723406885",
-            ["lucide-heart-crack"] = "rbxassetid://10723406299",
-            ["lucide-heart-handshake"] = "rbxassetid://10723406480",
-            ["lucide-heart-off"] = "rbxassetid://10723406662",
-            ["lucide-heart-pulse"] = "rbxassetid://10723406795",
-            ["lucide-help-circle"] = "rbxassetid://10723406988",
-            ["lucide-hexagon"] = "rbxassetid://10723407092",
-            ["lucide-highlighter"] = "rbxassetid://10723407192",
-            ["lucide-history"] = "rbxassetid://10723407335",
-            ["lucide-home"] = "rbxassetid://10723407389",
-            ["lucide-hourglass"] = "rbxassetid://10723407498",
-            ["lucide-ice-cream"] = "rbxassetid://10723414308",
-            ["lucide-image"] = "rbxassetid://10723415040",
-            ["lucide-image-minus"] = "rbxassetid://10723414487",
-            ["lucide-image-off"] = "rbxassetid://10723414677",
-            ["lucide-image-plus"] = "rbxassetid://10723414827",
-            ["lucide-import"] = "rbxassetid://10723415205",
-            ["lucide-inbox"] = "rbxassetid://10723415335",
-            ["lucide-indent"] = "rbxassetid://10723415494",
-            ["lucide-indian-rupee"] = "rbxassetid://10723415642",
-            ["lucide-infinity"] = "rbxassetid://10723415766",
-            ["lucide-info"] = "rbxassetid://10723415903",
-            ["lucide-inspect"] = "rbxassetid://10723416057",
-            ["lucide-italic"] = "rbxassetid://10723416195",
-            ["lucide-japanese-yen"] = "rbxassetid://10723416363",
-            ["lucide-joystick"] = "rbxassetid://10723416527",
-            ["lucide-key"] = "rbxassetid://10723416652",
-            ["lucide-keyboard"] = "rbxassetid://10723416765",
-            ["lucide-lamp"] = "rbxassetid://10723417513",
-            ["lucide-lamp-ceiling"] = "rbxassetid://10723416922",
-            ["lucide-lamp-desk"] = "rbxassetid://10723417016",
-            ["lucide-lamp-floor"] = "rbxassetid://10723417131",
-            ["lucide-lamp-wall-down"] = "rbxassetid://10723417240",
-            ["lucide-lamp-wall-up"] = "rbxassetid://10723417356",
-            ["lucide-landmark"] = "rbxassetid://10723417608",
-            ["lucide-languages"] = "rbxassetid://10723417703",
-            ["lucide-laptop"] = "rbxassetid://10723423881",
-            ["lucide-laptop-2"] = "rbxassetid://10723417797",
-            ["lucide-lasso"] = "rbxassetid://10723424235",
-            ["lucide-lasso-select"] = "rbxassetid://10723424058",
-            ["lucide-laugh"] = "rbxassetid://10723424372",
-            ["lucide-layers"] = "rbxassetid://10723424505",
-            ["lucide-layout"] = "rbxassetid://10723425376",
-            ["lucide-layout-dashboard"] = "rbxassetid://10723424646",
-            ["lucide-layout-grid"] = "rbxassetid://10723424838",
-            ["lucide-layout-list"] = "rbxassetid://10723424963",
-            ["lucide-layout-template"] = "rbxassetid://10723425187",
-            ["lucide-leaf"] = "rbxassetid://10723425539",
-            ["lucide-library"] = "rbxassetid://10723425615",
-            ["lucide-life-buoy"] = "rbxassetid://10723425685",
-            ["lucide-lightbulb"] = "rbxassetid://10723425852",
-            ["lucide-lightbulb-off"] = "rbxassetid://10723425762",
-            ["lucide-line-chart"] = "rbxassetid://10723426393",
-            ["lucide-link"] = "rbxassetid://10723426722",
-            ["lucide-link-2"] = "rbxassetid://10723426595",
-            ["lucide-link-2-off"] = "rbxassetid://10723426513",
-            ["lucide-list"] = "rbxassetid://10723433811",
-            ["lucide-list-checks"] = "rbxassetid://10734884548",
-            ["lucide-list-end"] = "rbxassetid://10723426886",
-            ["lucide-lis
-
-t-minus"] = "rbxassetid://10723426986",
-            ["lucide-list-music"] = "rbxassetid://10723427081",
-            ["lucide-list-ordered"] = "rbxassetid://10723427199",
-            ["lucide-list-plus"] = "rbxassetid://10723427334",
-            ["lucide-list-start"] = "rbxassetid://10723427494",
-            ["lucide-list-video"] = "rbxassetid://10723427619",
-            ["lucide-list-x"] = "rbxassetid://10723433655",
-            ["lucide-loader"] = "rbxassetid://10723434070",
-            ["lucide-loader-2"] = "rbxassetid://10723433935",
-            ["lucide-locate"] = "rbxassetid://10723434557",
-            ["lucide-locate-fixed"] = "rbxassetid://10723434236",
-            ["lucide-locate-off"] = "rbxassetid://10723434379",
-            ["lucide-lock"] = "rbxassetid://10723434711",
-            ["lucide-log-in"] = "rbxassetid://10723434830",
-            ["lucide-log-out"] = "rbxassetid://10723434906",
-            ["lucide-luggage"] = "rbxassetid://10723434993",
-            ["lucide-magnet"] = "rbxassetid://10723435069",
-            ["lucide-mail"] = "rbxassetid://10734885430",
-            ["lucide-mail-check"] = "rbxassetid://10723435182",
-            ["lucide-mail-minus"] = "rbxassetid://10723435261",
-            ["lucide-mail-open"] = "rbxassetid://10723435342",
-            ["lucide-mail-plus"] = "rbxassetid://10723435443",
-            ["lucide-mail-question"] = "rbxassetid://10723435515",
-            ["lucide-mail-search"] = "rbxassetid://10734884739",
-            ["lucide-mail-warning"] = "rbxassetid://10734885015",
-            ["lucide-mail-x"] = "rbxassetid://10734885247",
-            ["lucide-mails"] = "rbxassetid://10734885614",
-            ["lucide-map"] = "rbxassetid://10734886202",
-            ["lucide-map-pin"] = "rbxassetid://10734886004",
-            ["lucide-map-pin-off"] = "rbxassetid://10734885803",
-            ["lucide-maximize"] = "rbxassetid://10734886735",
-            ["lucide-maximize-2"] = "rbxassetid://10734886496",
-            ["lucide-medal"] = "rbxassetid://10734887072",
-            ["lucide-megaphone"] = "rbxassetid://10734887454",
-            ["lucide-megaphone-off"] = "rbxassetid://10734887311",
-            ["lucide-meh"] = "rbxassetid://10734887603",
-            ["lucide-menu"] = "rbxassetid://10734887784",
-            ["lucide-message-circle"] = "rbxassetid://10734888000",
-            ["lucide-message-square"] = "rbxassetid://10734888228",
-            ["lucide-mic"] = "rbxassetid://10734888864",
-            ["lucide-mic-2"] = "rbxassetid://10734888430",
-            ["lucide-mic-off"] = "rbxassetid://10734888646",
-            ["lucide-microscope"] = "rbxassetid://10734889106",
-            ["lucide-microwave"] = "rbxassetid://10734895076",
-            ["lucide-milestone"] = "rbxassetid://10734895310",
-            ["lucide-minimize"] = "rbxassetid://10734895698",
-            ["lucide-minimize-2"] = "rbxassetid://10734895530",
-            ["lucide-minus"] = "rbxassetid://10734896206",
-            ["lucide-minus-circle"] = "rbxassetid://10734895856",
-            ["lucide-minus-square"] = "rbxassetid://10734896029",
-            ["lucide-monitor"] = "rbxassetid://10734896881",
-            ["lucide-monitor-off"] = "rbxassetid://10734896360",
-            ["lucide-monitor-speaker"] = "rbxassetid://10734896512",
-            ["lucide-moon"] = "rbxassetid://10734897102",
-            ["lucide-more-horizontal"] = "rbxassetid://10734897250",
-            ["lucide-more-vertical"] = "rbxassetid://10734897387",
-            ["lucide-mountain"] = "rbxassetid://10734897956",
-            ["lucide-mountain-snow"] = "rbxassetid://10734897665",
-            ["lucide-mouse"] = "rbxassetid://10734898592",
-            ["lucide-mouse-pointer"] = "rbxassetid://10734898476",
-            ["lucide-mouse-pointer-2"] = "rbxassetid://10734898194",
-            ["lucide-mouse-pointer-click"] = "rbxassetid://10734898355",
-            ["lucide-move"] = "rbxassetid://10734900011",
-            ["lucide-move-3d"] = "rbxassetid://10734898756",
-            ["lucide-move-diagonal"] = "rbxassetid://10734899164",
-            ["lucide-move-dia
-
-gonal-2"] = "rbxassetid://10734898934",
-            ["lucide-move-horizontal"] = "rbxassetid://10734899414",
-            ["lucide-move-vertical"] = "rbxassetid://10734899821",
-            ["lucide-music"] = "rbxassetid://10734905958",
-            ["lucide-music-2"] = "rbxassetid://10734900215",
-            ["lucide-music-3"] = "rbxassetid://10734905665",
-            ["lucide-music-4"] = "rbxassetid://10734905823",
-            ["lucide-navigation"] = "rbxassetid://10734906744",
-            ["lucide-navigation-2"] = "rbxassetid://10734906332",
-            ["lucide-navigation-2-off"] = "rbxassetid://10734906144",
-            ["lucide-navigation-off"] = "rbxassetid://10734906580",
-            ["lucide-network"] = "rbxassetid://10734906975",
-            ["lucide-newspaper"] = "rbxassetid://10734907168",
-            ["lucide-octagon"] = "rbxassetid://10734907361",
-            ["lucide-option"] = "rbxassetid://10734907649",
-            ["lucide-outdent"] = "rbxassetid://10734907933",
-            ["lucide-package"] = "rbxassetid://10734909540",
-            ["lucide-package-2"] = "rbxassetid://10734908151",
-            ["lucide-package-check"] = "rbxassetid://10734908384",
-            ["lucide-package-minus"] = "rbxassetid://10734908626",
-            ["lucide-package-open"] = "rbxassetid://10734908793",
-            ["lucide-package-plus"] = "rbxassetid://10734909016",
-            ["lucide-package-search"] = "rbxassetid://10734909196",
-            ["lucide-package-x"] = "rbxassetid://10734909375",
-            ["lucide-paint-bucket"] = "rbxassetid://10734909847",
-            ["lucide-paintbrush"] = "rbxassetid://10734910187",
-            ["lucide-paintbrush-2"] = "rbxassetid://10734910030",
-            ["lucide-palette"] = "rbxassetid://10734910430",
-            ["lucide-palmtree"] = "rbxassetid://10734910680",
-            ["lucide-paperclip"] = "rbxassetid://10734910927",
-            ["lucide-party-popper"] = "rbxassetid://10734918735",
-            ["lucide-pause"] = "rbxassetid://10734919336",
-            ["lucide-pause-circle"] = "rbxassetid://10735024209",
-            ["lucide-pause-octagon"] = "rbxassetid://10734919143",
-            ["lucide-pen-tool"] = "rbxassetid://10734919503",
-            ["lucide-pencil"] = "rbxassetid://10734919691",
-            ["lucide-percent"] = "rbxassetid://10734919919",
-            ["lucide-person-standing"] = "rbxassetid://10734920149",
-            ["lucide-phone"] = "rbxassetid://10734921524",
-            ["lucide-phone-call"] = "rbxassetid://10734920305",
-            ["lucide-phone-forwarded"] = "rbxassetid://10734920508",
-            ["lucide-phone-incoming"] = "rbxassetid://10734920694",
-            ["lucide-phone-missed"] = "rbxassetid://10734920845",
-            ["lucide-phone-off"] = "rbxassetid://10734921077",
-            ["lucide-phone-outgoing"] = "rbxassetid://10734921288",
-            ["lucide-pie-chart"] = "rbxassetid://10734921727",
-            ["lucide-piggy-bank"] = "rbxassetid://10734921935",
-            ["lucide-pin"] = "rbxassetid://10734922324",
-            ["lucide-pin-off"] = "rbxassetid://10734922180",
-            ["lucide-pipette"] = "rbxassetid://10734922497",
-            ["lucide-pizza"] = "rbxassetid://10734922774",
-            ["lucide-plane"] = "rbxassetid://10734922971",
-            ["lucide-play"] = "rbxassetid://10734923549",
-            ["lucide-play-circle"] = "rbxassetid://10734923214",
-            ["lucide-plus"] = "rbxassetid://10734924532",
-            ["lucide-plus-circle"] = "rbxassetid://10734923868",
-            ["lucide-plus-square"] = "rbxassetid://10734924219",
-            ["lucide-podcast"] = "rbxassetid://10734929553",
-            ["lucide-pointer"] = "rbxassetid://10734929723",
-            ["lucide-pound-sterling"] = "rbxassetid://10734929981",
-            ["lucide-power"] = "rbxassetid://10734930466",
-            ["lucide-power-off"] = "rbxassetid://10734930257",
-            ["lucide-printer"] = "rbxassetid://10734930632",
-            ["lucide-puzzle"] = "rbxassetid://10734930886",
-            ["lucide-quote"] = "rbxassetid://10734931234",
-
-["lucide-radio"] = "rbxassetid://10734931596",
-            ["lucide-radio-receiver"] = "rbxassetid://10734931402",
-            ["lucide-rectangle-horizontal"] = "rbxassetid://10734931777",
-            ["lucide-rectangle-vertical"] = "rbxassetid://10734932081",
-            ["lucide-recycle"] = "rbxassetid://10734932295",
-            ["lucide-redo"] = "rbxassetid://10734932822",
-            ["lucide-redo-2"] = "rbxassetid://10734932586",
-            ["lucide-refresh-ccw"] = "rbxassetid://10734933056",
-            ["lucide-refresh-cw"] = "rbxassetid://10734933222",
-            ["lucide-refrigerator"] = "rbxassetid://10734933465",
-            ["lucide-regex"] = "rbxassetid://10734933655",
-            ["lucide-repeat"] = "rbxassetid://10734933966",
-            ["lucide-repeat-1"] = "rbxassetid://10734933826",
-            ["lucide-reply"] = "rbxassetid://10734934252",
-            ["lucide-reply-all"] = "rbxassetid://10734934132",
-            ["lucide-rewind"] = "rbxassetid://10734934347",
-            ["lucide-rocket"] = "rbxassetid://10734934585",
-            ["lucide-rocking-chair"] = "rbxassetid://10734939942",
-            ["lucide-rotate-3d"] = "rbxassetid://10734940107",
-            ["lucide-rotate-ccw"] = "rbxassetid://10734940376",
-            ["lucide-rotate-cw"] = "rbxassetid://10734940654",
-            ["lucide-rss"] = "rbxassetid://10734940825",
-            ["lucide-ruler"] = "rbxassetid://10734941018",
-            ["lucide-russian-ruble"] = "rbxassetid://10734941199",
-            ["lucide-sailboat"] = "rbxassetid://10734941354",
-            ["lucide-save"] = "rbxassetid://10734941499",
-            ["lucide-scale"] = "rbxassetid://10734941912",
-            ["lucide-scale-3d"] = "rbxassetid://10734941739",
-            ["lucide-scaling"] = "rbxassetid://10734942072",
-            ["lucide-scan"] = "rbxassetid://10734942565",
-            ["lucide-scan-face"] = "rbxassetid://10734942198",
-            ["lucide-scan-line"] = "rbxassetid://10734942351",
-            ["lucide-scissors"] = "rbxassetid://10734942778",
-            ["lucide-screen-share"] = "rbxassetid://10734943193",
-            ["lucide-screen-share-off"] = "rbxassetid://10734942967",
-            ["lucide-scroll"] = "rbxassetid://10734943448",
-            ["lucide-search"] = "rbxassetid://10734943674",
-            ["lucide-send"] = "rbxassetid://10734943902",
-            ["lucide-separator-horizontal"] = "rbxassetid://10734944115",
-            ["lucide-separator-vertical"] = "rbxassetid://10734944326",
-            ["lucide-server"] = "rbxassetid://10734949856",
-            ["lucide-server-cog"] = "rbxassetid://10734944444",
-            ["lucide-server-crash"] = "rbxassetid://10734944554",
-            ["lucide-server-off"] = "rbxassetid://10734944668",
-            ["lucide-settings"] = "rbxassetid://10734950309",
-            ["lucide-settings-2"] = "rbxassetid://10734950020",
-            ["lucide-share"] = "rbxassetid://10734950813",
-            ["lucide-share-2"] = "rbxassetid://10734950553",
-            ["lucide-sheet"] = "rbxassetid://10734951038",
-            ["lucide-shield"] = "rbxassetid://10734951847",
-            ["lucide-shield-alert"] = "rbxassetid://10734951173",
-            ["lucide-shield-check"] = "rbxassetid://10734951367",
-            ["lucide-shield-close"] = "rbxassetid://10734951535",
-            ["lucide-shield-off"] = "rbxassetid://10734951684",
-            ["lucide-shirt"] = "rbxassetid://10734952036",
-            ["lucide-shopping-bag"] = "rbxassetid://10734952273",
-            ["lucide-shopping-cart"] = "rbxassetid://10734952479",
-            ["lucide-shovel"] = "rbxassetid://10734952773",
-            ["lucide-shower-head"] = "rbxassetid://10734952942",
-            ["lucide-shrink"] = "rbxassetid://10734953073",
-            ["lucide-shrub"] = "rbxassetid://10734953241",
-            ["lucide-shuffle"] = "rbxassetid://10734953451",
-            ["lucide-sidebar"] = "rbxassetid://10734954301",
-            ["lucide-sidebar-close"] = "rbxassetid://10734953715",
-            ["lucide-sidebar-open"] = "rbxassetid://10734954000",
-            [
-
-"lucide-sigma"] = "rbxassetid://10734954538",
-            ["lucide-signal"] = "rbxassetid://10734961133",
-            ["lucide-signal-high"] = "rbxassetid://10734954807",
-            ["lucide-signal-low"] = "rbxassetid://10734955080",
-            ["lucide-signal-medium"] = "rbxassetid://10734955336",
-            ["lucide-signal-zero"] = "rbxassetid://10734960878",
-            ["lucide-siren"] = "rbxassetid://10734961284",
-            ["lucide-skip-back"] = "rbxassetid://10734961526",
-            ["lucide-skip-forward"] = "rbxassetid://10734961809",
-            ["lucide-skull"] = "rbxassetid://10734962068",
-            ["lucide-slack"] = "rbxassetid://10734962339",
-            ["lucide-slash"] = "rbxassetid://10734962600",
-            ["lucide-slice"] = "rbxassetid://10734963024",
-            ["lucide-sliders"] = "rbxassetid://10734963400",
-            ["lucide-sliders-horizontal"] = "rbxassetid://10734963191",
-            ["lucide-smartphone"] = "rbxassetid://10734963940",
-            ["lucide-smartphone-charging"] = "rbxassetid://10734963671",
-            ["lucide-smile"] = "rbxassetid://10734964441",
-            ["lucide-smile-plus"] = "rbxassetid://10734964188",
-            ["lucide-snowflake"] = "rbxassetid://10734964600",
-            ["lucide-sofa"] = "rbxassetid://10734964852",
-            ["lucide-sort-asc"] = "rbxassetid://10734965115",
-            ["lucide-sort-desc"] = "rbxassetid://10734965287",
-            ["lucide-speaker"] = "rbxassetid://10734965419",
-            ["lucide-sprout"] = "rbxassetid://10734965572",
-            ["lucide-square"] = "rbxassetid://10734965702",
-            ["lucide-star"] = "rbxassetid://10734966248",
-            ["lucide-star-half"] = "rbxassetid://10734965897",
-            ["lucide-star-off"] = "rbxassetid://10734966097",
-            ["lucide-stethoscope"] = "rbxassetid://10734966384",
-            ["lucide-sticker"] = "rbxassetid://10734972234",
-            ["lucide-sticky-note"] = "rbxassetid://10734972463",
-            ["lucide-stop-circle"] = "rbxassetid://10734972621",
-            ["lucide-stretch-horizontal"] = "rbxassetid://10734972862",
-            ["lucide-stretch-vertical"] = "rbxassetid://10734973130",
-            ["lucide-strikethrough"] = "rbxassetid://10734973290",
-            ["lucide-subscript"] = "rbxassetid://10734973457",
-            ["lucide-sun"] = "rbxassetid://10734974297",
-            ["lucide-sun-dim"] = "rbxassetid://10734973645",
-            ["lucide-sun-medium"] = "rbxassetid://10734973778",
-            ["lucide-sun-moon"] = "rbxassetid://10734973999",
-            ["lucide-sun-snow"] = "rbxassetid://10734974130",
-            ["lucide-sunrise"] = "rbxassetid://10734974522",
-            ["lucide-sunset"] = "rbxassetid://10734974689",
-            ["lucide-superscript"] = "rbxassetid://10734974850",
-            ["lucide-swiss-franc"] = "rbxassetid://10734975024",
-            ["lucide-switch-camera"] = "rbxassetid://10734975214",
-            ["lucide-sword"] = "rbxassetid://10734975486",
-            ["lucide-swords"] = "rbxassetid://10734975692",
-            ["lucide-syringe"] = "rbxassetid://10734975932",
-            ["lucide-table"] = "rbxassetid://10734976230",
-            ["lucide-table-2"] = "rbxassetid://10734976097",
-            ["lucide-tablet"] = "rbxassetid://10734976394",
-            ["lucide-tag"] = "rbxassetid://10734976528",
-            ["lucide-tags"] = "rbxassetid://10734976739",
-            ["lucide-target"] = "rbxassetid://10734977012",
-            ["lucide-tent"] = "rbxassetid://10734981750",
-            ["lucide-terminal"] = "rbxassetid://10734982144",
-            ["lucide-terminal-square"] = "rbxassetid://10734981995",
-            ["lucide-text-cursor"] = "rbxassetid://10734982395",
-            ["lucide-text-cursor-input"] = "rbxassetid://10734982297",
-            ["lucide-thermometer"] = "rbxassetid://10734983134",
-            ["lucide-thermometer-snowflake"] = "rbxassetid://10734982571",
-            ["lucide-thermometer-sun"] = "rbxassetid://10734982771",
-            ["lucide-thumbs-down"] = "rbxassetid://10734983359",
-            ["lu
-
-cide-thumbs-up"] = "rbxassetid://10734983629",
-            ["lucide-ticket"] = "rbxassetid://10734983868",
-            ["lucide-timer"] = "rbxassetid://10734984606",
-            ["lucide-timer-off"] = "rbxassetid://10734984138",
-            ["lucide-timer-reset"] = "rbxassetid://10734984355",
-            ["lucide-toggle-left"] = "rbxassetid://10734984834",
-            ["lucide-toggle-right"] = "rbxassetid://10734985040",
-            ["lucide-tornado"] = "rbxassetid://10734985247",
-            ["lucide-toy-brick"] = "rbxassetid://10747361919",
-            ["lucide-train"] = "rbxassetid://10747362105",
-            ["lucide-trash"] = "rbxassetid://10747362393",
-            ["lucide-trash-2"] = "rbxassetid://10747362241",
-            ["lucide-tree-deciduous"] = "rbxassetid://10747362534",
-            ["lucide-tree-pine"] = "rbxassetid://10747362748",
-            ["lucide-trees"] = "rbxassetid://10747363016",
-            ["lucide-trending-down"] = "rbxassetid://10747363205",
-            ["lucide-trending-up"] = "rbxassetid://10747363465",
-            ["lucide-triangle"] = "rbxassetid://10747363621",
-            ["lucide-trophy"] = "rbxassetid://10747363809",
-            ["lucide-truck"] = "rbxassetid://10747364031",
-            ["lucide-tv"] = "rbxassetid://10747364593",
-            ["lucide-tv-2"] = "rbxassetid://10747364302",
-            ["lucide-type"] = "rbxassetid://10747364761",
-            ["lucide-umbrella"] = "rbxassetid://10747364971",
-            ["lucide-underline"] = "rbxassetid://10747365191",
-            ["lucide-undo"] = "rbxassetid://10747365484",
-            ["lucide-undo-2"] = "rbxassetid://10747365359",
-            ["lucide-unlink"] = "rbxassetid://10747365771",
-            ["lucide-unlink-2"] = "rbxassetid://10747397871",
-            ["lucide-unlock"] = "rbxassetid://10747366027",
-            ["lucide-upload"] = "rbxassetid://10747366434",
-            ["lucide-upload-cloud"] = "rbxassetid://10747366266",
-            ["lucide-usb"] = "rbxassetid://10747366606",
-            ["lucide-user"] = "rbxassetid://10747373176",
-            ["lucide-user-check"] = "rbxassetid://10747371901",
-            ["lucide-user-cog"] = "rbxassetid://10747372167",
-            ["lucide-user-minus"] = "rbxassetid://10747372346",
-            ["lucide-user-plus"] = "rbxassetid://10747372702",
-            ["lucide-user-x"] = "rbxassetid://10747372992",
-            ["lucide-users"] = "rbxassetid://10747373426",
-            ["lucide-utensils"] = "rbxassetid://10747373821",
-            ["lucide-utensils-crossed"] = "rbxassetid://10747373629",
-            ["lucide-venetian-mask"] = "rbxassetid://10747374003",
-            ["lucide-verified"] = "rbxassetid://10747374131",
-            ["lucide-vibrate"] = "rbxassetid://10747374489",
-            ["lucide-vibrate-off"] = "rbxassetid://10747374269",
-            ["lucide-video"] = "rbxassetid://10747374938",
-            ["lucide-video-off"] = "rbxassetid://10747374721",
-            ["lucide-view"] = "rbxassetid://10747375132",
-            ["lucide-voicemail"] = "rbxassetid://10747375281",
-            ["lucide-volume"] = "rbxassetid://10747376008",
-            ["lucide-volume-1"] = "rbxassetid://10747375450",
-            ["lucide-volume-2"] = "rbxassetid://10747375679",
-            ["lucide-volume-x"] = "rbxassetid://10747375880",
-            ["lucide-wallet"] = "rbxassetid://10747376205",
-            ["lucide-wand"] = "rbxassetid://10747376565",
-            ["lucide-wand-2"] = "rbxassetid://10747376349",
-            ["lucide-watch"] = "rbxassetid://10747376722",
-            ["lucide-waves"] = "rbxassetid://10747376931",
-            ["lucide-webcam"] = "rbxassetid://10747381992",
-            ["lucide-wifi"] = "rbxassetid://10747382504",
-            ["lucide-wifi-off"] = "rbxassetid://10747382268",
-            ["lucide-wind"] = "rbxassetid://10747382750",
-            ["lucide-wrap-text"] = "rbxassetid://10747383065",
-            ["lucide-wrench"] = "rbxassetid://10747383470",
-            ["lucide-x"] = "rbxassetid://10747384394",
-            ["lucide-x-circle"] = "rbxassetid://10747383819",
-
-["lucide-x-octagon"] = "rbxassetid://10747384037",
-            ["lucide-x-square"] = "rbxassetid://10747384217",
-            ["lucide-zoom-in"] = "rbxassetid://10747384552",
-            ["lucide-zoom-out"] = "rbxassetid://10747384679",
-        },
-    }
-    ]])
-};
-spoofed_files = {
-    ["lime_ui_lib.lua"] = [=[
-	for i,v in pairs(game.CoreGui:GetChildren()) do
-		if v.Name == "UiLib" then
-			v:Destroy()
+local function getPlayerList()
+	local list = {}
+	for _, plr in ipairs(PS:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			table.insert(list, plr.DisplayName .. " (" .. plr.Name .. ")")
 		end
 	end
+	return list
+end
 
-	local UiLib = Instance.new("ScreenGui")
-	UiLib.Name = "UiLib"
-	UiLib.Parent = game.CoreGui
-	UiLib.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local function getPlayerFromSelection(selection)
+	if not selection then return nil end
+	local username = selection:match("%((.-)%)")
+	if username then return PS:FindFirstChild(username) end
+	return nil
+end
 
-	local function getNextWindowPos()
-		local biggest = 0;
-		local ok = nil;
-		for i, v in pairs(UiLib:GetChildren()) do
-			if v.Position.X.Offset > biggest then
-				biggest = v.Position.X.Offset
-				ok = v;
+-- =====================================================
+-- МОБИЛЬНОЕ УПРАВЛЕНИЕ (100% ТАЧ)
+-- =====================================================
+local Mobile = {
+	TouchStart = false,
+	MoveDir = Vector3.new(0, 0, 0),
+	Buttons = {},
+}
+
+-- ДЖОЙСТИК
+local function CreateJoystick()
+	local size = 130
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(0, size, 0, size)
+	frame.Position = UDim2.new(0.08, 0, 0.75, 0)
+	frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+	frame.BackgroundTransparency = 0.6
+	frame.BorderSizePixel = 0
+	frame.Parent = CoreGui
+	frame.ZIndex = 999
+	
+	local border = Instance.new("Frame")
+	border.Size = UDim2.new(1, -10, 1, -10)
+	border.Position = UDim2.new(0.5, 0, 0.5, 0)
+	border.BackgroundTransparency = 1
+	border.BorderSizePixel = 2
+	border.BorderColor3 = Color3.fromRGB(150, 150, 200)
+	border.Parent = frame
+	
+	local inner = Instance.new("Frame")
+	inner.Size = UDim2.new(0, 45, 0, 45)
+	inner.Position = UDim2.new(0.5, -22.5, 0.5, -22.5)
+	inner.BackgroundColor3 = Color3.fromRGB(200, 200, 255)
+	inner.BackgroundTransparency = 0.3
+	inner.BorderSizePixel = 0
+	inner.Parent = frame
+	
+	local function onTouchBegan(input)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			local pos = input.Position
+			local fPos = frame.AbsolutePosition
+			local center = fPos + Vector2.new(size/2, size/2)
+			if (pos - center).Magnitude < size then
+				Mobile.TouchStart = true
 			end
 		end
-		if biggest == 0 then
-			biggest = biggest + 15;
+	end
+	
+	local function onTouchMoved(input)
+		if input.UserInputType == Enum.UserInputType.Touch and Mobile.TouchStart then
+			local pos = input.Position
+			local fPos = frame.AbsolutePosition
+			local center = fPos + Vector2.new(size/2, size/2)
+			local delta = pos - center
+			local maxD = size/2 - 15
+			local clamped = delta.Magnitude > maxD and delta.Unit * maxD or delta
+			inner.Position = UDim2.new(0.5, clamped.X, 0.5, clamped.Y)
+			local norm = delta.Magnitude > 0 and delta / maxD or Vector2.new(0, 0)
+			Mobile.MoveDir = Vector3.new(norm.X, 0, -norm.Y)
+		end
+	end
+	
+	local function onTouchEnded(input)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			Mobile.TouchStart = false
+			inner.Position = UDim2.new(0.5, -22.5, 0.5, -22.5)
+			Mobile.MoveDir = Vector3.new(0, 0, 0)
+		end
+	end
+	
+	UserInputService.InputBegan:Connect(onTouchBegan)
+	UserInputService.InputChanged:Connect(onTouchMoved)
+	UserInputService.InputEnded:Connect(onTouchEnded)
+	return frame
+end
+
+-- КНОПКИ
+local function CreateButtons()
+	local btns = {}
+	local function addBtn(name, icon, yPos, color, callback)
+		local btn = Instance.new("ImageButton")
+		btn.Size = UDim2.new(0, 60, 0, 60)
+		btn.Position = UDim2.new(0.85, 0, yPos, 0)
+		btn.BackgroundColor3 = color or Color3.fromRGB(255, 255, 255)
+		btn.BackgroundTransparency = 0.35
+		btn.Image = icon
+		btn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		btn.Parent = CoreGui
+		btn.ZIndex = 999
+		btn.MouseButton1Click:Connect(callback)
+		local stroke = Instance.new("UICorner", btn)
+		stroke.CornerRadius = UDim.new(0.5, 0)
+		btns[name] = btn
+		return btn
+	end
+	
+	addBtn("Jump", "rbxassetid://1297645249", 0.80, Color3.fromRGB(0, 180, 255), function()
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+	end)
+	
+	addBtn("Sit", "rbxassetid://1297645336", 0.70, Color3.fromRGB(100, 220, 100), function()
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if hum then hum.Sit = not hum.Sit end
+	end)
+	
+	addBtn("Reset", "rbxassetid://1297645513", 0.60, Color3.fromRGB(255, 80, 80), function()
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if hum then hum.Health = 0 end
+	end)
+	
+	addBtn("TP", "rbxassetid://1297645697", 0.50, Color3.fromRGB(255, 200, 0), function()
+		local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			local pos = Camera.CFrame.Position + Camera.CFrame.LookVector * 15
+			hrp.CFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
+		end
+	end)
+	
+	return btns
+end
+
+-- ДВИЖЕНИЕ
+local function MobileMovement()
+	task.spawn(function()
+		while true do
+			local root = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+			if root and Mobile.MoveDir.Magnitude > 0.1 then
+				local cam = Camera.CFrame
+				local fwd = cam.LookVector * Vector3.new(1, 0, 1)
+				local right = cam.RightVector * Vector3.new(1, 0, 1)
+				local move = (fwd * Mobile.MoveDir.Z + right * Mobile.MoveDir.X)
+				if move.Magnitude > 1 then move = move.Unit end
+				root.CFrame = root.CFrame + move * 0.7
+				root.AssemblyLinearVelocity = Vector3.zero
+			end
+			task.wait(0.03)
+		end
+	end)
+end
+
+task.spawn(function()
+	CreateJoystick()
+	Mobile.Buttons = CreateButtons()
+	MobileMovement()
+end)
+
+-- =====================================================
+-- =====================================================
+-- ВСЕ ФУНКЦИИ ИЗ ОРИГИНАЛЬНОГО ФАЙЛА (100%)
+-- =====================================================
+-- =====================================================
+
+-- =====================================================
+-- DEFENSE TAB (полностью)
+-- =====================================================
+local DefenseGroup = Tabs.Defense:AddLeftGroupbox("Defense Main")
+local DefenseExtra = Tabs.Defense:AddRightGroupbox("Extra Defense")
+
+-- Anti Grab (полный)
+local autoStruggleConn = nil
+DefenseGroup:AddToggle("AntiGrabObsidian", {
+	Text = "Anti Grab",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			if autoStruggleConn then autoStruggleConn:Disconnect() end
+			autoStruggleConn = R.Heartbeat:Connect(function()
+				local char = LocalPlayer.Character
+				if char and char:FindFirstChild("Head") and char.Head:FindFirstChild("PartOwner") then
+					task.spawn(function()
+						local Struggle = RS.CharacterEvents and RS.CharacterEvents:FindFirstChild("Struggle")
+						if Struggle then Struggle:FireServer(LocalPlayer) end
+						pcall(function() RS.GameCorrectionEvents.StopAllVelocity:FireServer() end)
+						for _, part in pairs(char:GetChildren()) do
+							if part:IsA("BasePart") then part.Anchored = true end
+						end
+						local isHeld = LocalPlayer:FindFirstChild("IsHeld")
+						while isHeld and isHeld.Value do task.wait() end
+						for _, part in pairs(char:GetChildren()) do
+							if part:IsA("BasePart") then part.Anchored = false end
+						end
+					end)
+				end
+			end)
 		else
-			biggest = biggest + ok.Size.X.Offset + 10;
+			if autoStruggleConn then autoStruggleConn:Disconnect() end
 		end
-		
-		return biggest;
 	end
+})
 
-	local Library = {}
-
-	function Library:Window(title)
-		local Top = Instance.new("Frame")
-		local UICorner = Instance.new("UICorner")
-		local Container = Instance.new("Frame")
-		local UIListLayout_2 = Instance.new("UIListLayout")
-		local Line = Instance.new("Frame")
-		local Title = Instance.new("TextLabel")
-		local Minimize = Instance.new("ImageButton")
-
-		Top.Name = "Top"
-		Top.Parent = UiLib
-		Top.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-		Top.BorderSizePixel = 0
-		Top.Position = UDim2.new(0, getNextWindowPos(), 0.01, 0)
-		Top.Size = UDim2.new(0, 204, 0, 28)
-		Top.Active = true
-		Top.Draggable = true
-	Top.BackgroundTransparency = 0.5
-
-		UICorner.CornerRadius = UDim.new(0, 4)
-		UICorner.Parent = Top
-
-		Container.Name = "Container"
-		Container.Parent = Top
-		Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Container.BackgroundTransparency = 1.000
-		Container.ClipsDescendants = true
-		Container.Position = UDim2.new(0, 0, 1, 0)
-		Container.Size = UDim2.new(0, 204, 0, 762)
-
-		UIListLayout_2.Parent = Container
-		UIListLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
-		UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-
-		Line.Name = "Line"
-		Line.Parent = Top
-		Line.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-		Line.BorderSizePixel = 0
-		Line.Position = UDim2.new(0, 0, 0.892857134, 0)
-		Line.Size = UDim2.new(0, 204, 0, 3)
-	Line.BackgroundTransparency = 1
-
-		Title.Name = "Title"
-		Title.Parent = Top
-		Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Title.BackgroundTransparency = 1.000
-		Title.Position = UDim2.new(0.0245098043, 0, 0.142857149, 0)
-		Title.Size = UDim2.new(0, 174, 0, 20)
-		Title.Font = Enum.Font.GothamSemibold
-		Title.Text = title
-		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-		Title.TextScaled = true
-		Title.TextSize = 14.000
-		Title.TextWrapped = true
-		Title.TextXAlignment = Enum.TextXAlignment.Left
-
-		Minimize.Name = "Minimize"
-		Minimize.Parent = Top
-		Minimize.BackgroundTransparency = 1.000
-		Minimize.Position = UDim2.new(0.877451003, 0, 0, 0)
-		Minimize.Rotation = 90.000
-		Minimize.Size = UDim2.new(0, 25, 0, 25)
-		Minimize.ZIndex = 2
-		Minimize.Image = "rbxassetid://3926307971"
-		Minimize.ImageColor3 = Color3.fromRGB(0, 255, 102)
-		Minimize.ImageRectOffset = Vector2.new(764, 244)
-		Minimize.ImageRectSize = Vector2.new(36, 36)
-
-		local function UZVNGAL_fake_script() -- Minimize.Script 
-			local script = Instance.new('Script', Minimize)
-
-			script.Parent.MouseButton1Click:Connect(function()
-				if script.Parent.Parent.Container.Size == UDim2.new(0, 204,0, 762) then 
-					game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 180}):Play();
-					game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(255, 0, 68)}):Play()
-					script.Parent.Parent.Container:TweenSize(UDim2.new(0, 204,0, 0), "InOut", "Sine", 0.25, true)
-					wait(0.25)
-					script.Parent.Parent.Line.Visible = false
-				else
-					game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation =
-
-90}):Play();
-					game:GetService("TweenService"):Create(script.Parent, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(0, 255, 102)}):Play()
-					script.Parent.Parent.Container:TweenSize(UDim2.new(0, 204,0, 762), "InOut", "Sine", 0.2, true)
-					script.Parent.Parent.Line.Visible = true
+-- Anti Blobman
+local antiBlob1T = false
+DefenseGroup:AddToggle("AntiBlobmanToggle", {
+	Text = "Anti Blobman",
+	Default = false,
+	Callback = function(on)
+		antiBlob1T = on
+		if on then
+			workspace.DescendantAdded:Connect(function(toy)
+				if toy.Name == "CreatureBlobman" and antiBlob1T then
+					pcall(function()
+						if toy:FindFirstChild("LeftDetector") then toy.LeftDetector:Destroy() end
+						if toy:FindFirstChild("RightDetector") then toy.RightDetector:Destroy() end
+					end)
 				end
 			end)
 		end
-		coroutine.wrap(UZVNGAL_fake_script)()
-		
-		local Lib = {}
-		
-		function Lib:Button(name, callback)
-			local ButtonContainer = Instance.new("Frame")
-			local Button = Instance.new("TextButton")
-			local ButtonAni = Instance.new("Frame")
-			local UICorner_2 = Instance.new("UICorner")
-			local UIListLayout = Instance.new("UIListLayout")
-			local ButtonName = Instance.new("TextLabel")
-			
-			ButtonContainer.Name = "ButtonContainer"
-			ButtonContainer.Parent = Container
-			ButtonContainer.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-			ButtonContainer.BorderSizePixel = 0
-			ButtonContainer.Size = UDim2.new(0, 204, 0, 28)
-		ButtonContainer.BackgroundTransparency = 0.5
-			
-			Button.Name = "Button"
-			Button.Parent = ButtonContainer
-			Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			Button.BackgroundTransparency = 1.000
-			Button.Size = UDim2.new(0, 204, 0, 28)
-			Button.Font = Enum.Font.SourceSans
-			Button.Text = ""
-			Button.TextColor3 = Color3.fromRGB(0, 0, 0)
-			Button.TextSize = 14.000
+	end
+})
 
-			Button.MouseButton1Click:Connect(function()
-				callback()
-			end)
-			
-			ButtonAni.Name = "ButtonAni"
-			ButtonAni.Parent = Button
-			ButtonAni.BackgroundColor3 = Color3.fromRGB(0, 255, 102)
-			ButtonAni.Position = UDim2.new(0.0245098043, 0, 0.0714285746, 0)
-			
-			UICorner_2.CornerRadius = UDim.new(0, 4)
-			UICorner_2.Parent = ButtonAni
-			
-			UIListLayout.Parent = Button
-			UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-			UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-			
-			ButtonName.Name = "ButtonName"
-			ButtonName.Parent = ButtonContainer
-			ButtonName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			ButtonName.BackgroundTransparency = 1.000
-			ButtonName.Position = UDim2.new(0.0245098043, 0, 0.142857149, 0)
-			ButtonName.Size = UDim2.new(0, 194, 0, 20)
-			ButtonName.ZIndex = 3
-			ButtonName.Font = Enum.Font.GothamSemibold
-			ButtonName.Text = name
-			ButtonName.TextColor3 = Color3.fromRGB(255, 255, 255)
-			ButtonName.TextScaled = true
-			ButtonName.TextSize = 14.000
-			ButtonName.TextWrapped = true
-			
-			local function ZNVYM_fake_script() -- Button.Script 
-				local script = Instance.new('Script', Button)
-				
-				script.Parent.MouseButton1Click:Connect(function()
-					script.Parent.ButtonAni:TweenSize(UDim2.new(0, 194,0, 24), 'InOut', "Sine", 0.3, true)
-					wait(0.45)
-					script.Parent.ButtonAni:TweenSize(UDim2.new(0, 0, 0, 0), "InOut", "Sine", 0.3, true)
-				end)
-			end
-			coroutine.wrap(ZNVYM_fake_script)()
-		end
-		
-		function Lib:Toggle(name, callback)
-			local ToggleContainer = Instance.new("Frame")
-			local ToggleName = Instance.new("TextLabel")
-			local Toggle = Instance.new("TextButton")
-			local UICorner_3 = Instance.new("UICorner")
-			local Off = Instance.new("ImageLabel")
-			local On = Instance.new("ImageLabel")
-			
-			ToggleContainer.Name = "ToggleContainer"
-			ToggleContainer.Parent = Container
-			ToggleContainer.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-			ToggleContainer.BorderSizePixel = 0
-			ToggleContainer.Size = UDim2.new(0, 204, 0, 30)
-		ToggleContainer.BackgroundTransparency = 0.5
-			
-			ToggleName.Name = "ToggleName"
-			ToggleName.Parent = ToggleContainer
-			ToggleName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			ToggleName.BackgroundTransparency = 1.000
-			ToggleName.Position = UDim2.new(0.0245098043, 0, 0.142857105, 0)
-			ToggleName.Size = UDim2.new(0, 169, 0, 20)
-			ToggleName.Font = Enum.Font.GothamSemibold
-			ToggleName.Text = name
-			ToggleName.TextColor3 = Color3.fromRGB(255, 255, 255)
-			ToggleName.TextScaled = true
-			ToggleName.TextSize = 14.000
-			ToggleName.TextWrapped = true
-			ToggleName.TextXAlignment = Enum.TextXAlignment.Left
-			
-			Toggle.Name = "Toggle"
-
-			Toggle.Parent = ToggleContainer
-			Toggle.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
-			Toggle.BorderColor3 = Color3.fromRGB(27, 42, 53)
-			Toggle.Position = UDim2.new(0.852941215, 0, 0.0666666627, 0)
-			Toggle.Size = UDim2.new(0, 25, 0, 23)
-			Toggle.AutoButtonColor = false
-			Toggle.Font = Enum.Font.SourceSans
-			Toggle.Text = ""
-			Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
-			Toggle.TextSize = 14.000
-		Toggle.BackgroundTransparency = 1
-			local Toggled = false
-			Toggle.MouseButton1Click:Connect(function()
-				if Toggled == false then
-					Toggled = true
-				else
-					Toggled = false
-				end
-				callback(Toggled)
-			end)
-			
-			UICorner_3.CornerRadius = UDim.new(0, 3)
-			UICorner_3.Parent = Toggle
-			
-			Off.Name = "Off"
-			Off.Parent = Toggle
-			Off.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			Off.BackgroundTransparency = 1.000
-			Off.Size = UDim2.new(0, 25, 0, 25)
-			Off.Image = "rbxassetid://3926305904"
-			Off.ImageColor3 = Color3.fromRGB(255, 0, 68)
-			Off.ImageRectOffset = Vector2.new(924, 724)
-			Off.ImageRectSize = Vector2.new(36, 36)
-			
-			On.Name = "On"
-			On.Parent = Toggle
-			On.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			On.BackgroundTransparency = 1.000
-			On.Size = UDim2.new(0, 25, 0, 25)
-			On.Visible = false
-			On.Image = "rbxassetid://3926305904"
-			On.ImageColor3 = Color3.fromRGB(0, 255, 102)
-			On.ImageRectOffset = Vector2.new(312, 4)
-			On.ImageRectSize = Vector2.new(24, 24)
-			
-			local function XLZZDX_fake_script() -- Toggle.Script 
-				local script = Instance.new('Script', Toggle)
-				
-				script.Parent.MouseButton1Click:Connect(function()
-					if script.Parent.Off.Rotation == 0 then
-						script.Parent.On.Rotation = 0
-						game:GetService("TweenService"):Create(script.Parent.Off, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 360}):Play();
-						wait(0.3)
-						script.Parent.Off.Visible = false
-						script.Parent.On.Visible = true
-					else
-						script.Parent.Off.Rotation = 0
-						game:GetService("TweenService"):Create(script.Parent.On, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = -360}):Play();
-						wait(0.3)
-						script.Parent.On.Visible = false
-						script.Parent.Off.Visible = true
+-- Anti Explosion
+local antiExplodeT = false
+DefenseGroup:AddToggle("AntiExplosionToggle", {
+	Text = "Anti Explosion",
+	Default = false,
+	Callback = function(on)
+		antiExplodeT = on
+		if on then
+			task.spawn(function()
+				local char = LocalPlayer.Character
+				local hrp = char and char:FindFirstChild("HumanoidRootPart")
+				if not hrp then return end
+				workspace.ChildAdded:Connect(function(model)
+					if model.Name == "Part" and antiExplodeT then
+						local mag = (model.Position - hrp.Position).Magnitude
+						if mag <= 20 then
+							hrp.Anchored = true
+							task.wait(0.01)
+							local rightArm = char:FindFirstChild("Right Arm")
+							local ragdoll = rightArm and rightArm:FindFirstChild("RagdollLimbPart")
+							while ragdoll and ragdoll.CanCollide do task.wait(0.001) end
+							hrp.Anchored = false
+						end
 					end
 				end)
-			end
-			coroutine.wrap(XLZZDX_fake_script)()
+			end)
 		end
-		
-		return Lib
-		
 	end
+})
 
-	return Library
-    ]=];
-    ["simple_tp_to_houses_script.lua"] = [=[
-	local slide_tp_en
-	local loop_tp_en
+-- Anti Burn
+local hookBurnConn
+DefenseGroup:AddToggle("AntiBurnToggle", {
+	Text = "Anti Burn",
+	Default = false,
+	Callback = function(on)
+		if on then
+			local char = LocalPlayer.Character
+			local hum = char:WaitForChild("Humanoid")
+			local hrp = char:WaitForChild("HumanoidRootPart")
+			char.PrimaryPart = hrp
+			if hookBurnConn then hookBurnConn:Disconnect() end
+			hookBurnConn = hum.FireDebounce.Changed:Connect(function(isBurning)
+				if isBurning then
+					local oldCF = hrp.CFrame
+					local plots = workspace:FindFirstChild("Plots")
+					if plots and plots:FindFirstChild("Plot2") then
+						local pb = plots.Plot2.Barrier and plots.Plot2.Barrier:FindFirstChild("PlotBarrier")
+						if pb and pb:IsA("BasePart") then
+							char:SetPrimaryPartCFrame(pb.CFrame * CFrame.new(0, 6, 0))
+							task.wait(0.3)
+							local firePart = char:FindFirstChild("FirePlayerPart", true)
+							if firePart then
+								for _, obj in pairs(firePart:GetChildren()) do
+									if obj:IsA("Sound") then obj:Stop() end
+									if obj:IsA("Light") or obj:IsA("ParticleEmitter") then obj.Enabled = false end
+								end
+								if firePart:FindFirstChild("CanBurn") then firePart.CanBurn.Value = false end
+								if hum:FindFirstChild("FireDebounce") then hum.FireDebounce.Value = false end
+							end
+							task.wait(0.6)
+							if char and char.PrimaryPart then char:SetPrimaryPartCFrame(oldCF) end
+						end
+					end
+				end
+			end)
+		elseif hookBurnConn then hookBurnConn:Disconnect() end
+	end
+})
 
-	local last_house
-
-	local houses = {
-	[1] = CFrame.new(-491, -7, -166),
-	[2] = CFrame.new(-535, -7, 93),
-	[3] = CFrame.new(250, -6, 463),
-	[4] = CFrame.new(554, 123, -72),
-	[5] = CFrame.new(510, 83, -339),
-	[6] = CFrame.new(3, -7, -2)
-	}
-
-	local function tp(pos)
-	last_house = pos
-
-	local me = game.Players.LocalPlayer
-	local char = me.Character or me.CharacterAdded
-	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-
-	if hrp then
-		if not slide_tp_en then
-			hrp.CFrame = pos
+-- Anti Void
+local antiVoidConn
+DefenseGroup:AddToggle("AntiVoidToggle", {
+	Text = "Anti Void",
+	Default = false,
+	Callback = function(on)
+		if on then
+			if antiVoidConn then antiVoidConn:Disconnect() end
+			antiVoidConn = R.Heartbeat:Connect(function()
+				local char = LocalPlayer.Character
+				if char and char.PrimaryPart then
+					local pos = char.PrimaryPart.Position
+					if pos.Y < -50 then
+						char:SetPrimaryPartCFrame(CFrame.new(pos.X, pos.Y + 100, pos.Z))
+						char.PrimaryPart.AssemblyLinearVelocity = Vector3.zero
+					end
+				end
+			end)
 		else
-			local info = TweenInfo.new(0.15, Enum.EasingStyle.Sine, Enum.EasingDirection.In, 0, false, 0)
-			local cf = {["CFrame"] = pos}
-			game:GetService("TweenService"):Create(hrp, info, cf):Play()
+			if antiVoidConn then antiVoidConn:Disconnect() end
 		end
-		
-		hrp.Velocity = Vector3.new(0, 0, 0)
 	end
+})
+
+-- Anti Sticky
+DefenseGroup:AddToggle("AntiStickyToggle", {
+	Text = "Anti Sticky",
+	Default = false,
+	Callback = function(Value)
+		local sticky = LocalPlayer.PlayerScripts:FindFirstChild("StickyPartsTouchDetection")
+		if sticky then sticky.Disabled = Value end
 	end
+})
 
-	local l = loadstring(game:HttpGet("https://raw.githubusercontent.com/m1kp0/libraries/refs/heads/main/m1kpe0_lime.lua"))()
+-- Anti Lag (удаление граб-линий)
+local createGrabLineCopy, extendGrabLineCopy
+local grabFolder = RS:FindFirstChild("GrabEvents")
+if grabFolder then
+	local originalCreate = grabFolder:FindFirstChild("CreateGrabLine")
+	local originalExtend = grabFolder:FindFirstChild("ExtendGrabLine")
+	if originalCreate then createGrabLineCopy = originalCreate:Clone() end
+	if originalExtend then extendGrabLineCopy = originalExtend:Clone() end
+end
 
-	local w = l:Window("teleport")
-
-	w:Button("pink house", function() tp(houses[1]) end)
-	w:Button("green house", function() tp(houses[2]) end)
-	w:Button("purple house", function() tp(houses[3]) end)
-	w:Button("china house", function() tp(houses[4]) end)
-	w:Button("blue house", function() tp(houses[5]) end)
-	w:Button("spawn", function() tp(houses[6]) end)
-
-	w:Toggle("slide tp", function(bool) slide_tp_en = bool end)
-
-	w:Toggle("loop tp", function(bool)
-	loop_tp_en = bool
-	while loop_tp_en do
-		tp(last_house or houses[0])
-		task.wait()
+DefenseGroup:AddToggle("AntiLagToggle", {
+	Text = "Anti Lag",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			local gf = RS:FindFirstChild("GrabEvents")
+			if gf then
+				local create = gf:FindFirstChild("CreateGrabLine")
+				local extend = gf:FindFirstChild("ExtendGrabLine")
+				if create and create:IsA("RemoteEvent") then create:Destroy() end
+				if extend and extend:IsA("RemoteEvent") then extend:Destroy() end
+			end
+			for _, v in ipairs(workspace:GetDescendants()) do
+				if v:IsA("Beam") or v.Name:lower():find("line") then v:Destroy() end
+			end
+		else
+			local gf = RS:FindFirstChild("GrabEvents")
+			if gf then
+				if createGrabLineCopy and not gf:FindFirstChild("CreateGrabLine") then
+					createGrabLineCopy:Clone().Parent = gf
+				end
+				if extendGrabLineCopy and not gf:FindFirstChild("ExtendGrabLine") then
+					extendGrabLineCopy:Clone().Parent = gf
+				end
+			end
+		end
 	end
+})
+
+-- Anti Input Lag (полный)
+DefenseExtra:AddToggle("AntiInputLag", {
+	Text = "Anti Input Lag",
+	Default = false,
+	Callback = function(Value)
+		_G.AntiInputLag = Value
+		if Value then
+			task.spawn(function()
+				local SelectedToy = "FoodHamburger"
+				while _G.AntiInputLag do
+					local char = LocalPlayer.Character
+					local hrp = char and char:FindFirstChild("HumanoidRootPart")
+					if hrp then
+						local folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+						local toy = folder and folder:FindFirstChild(SelectedToy)
+						if not toy then
+							pcall(function()
+								RS.MenuToys.SpawnToyRemoteFunction:InvokeServer(SelectedToy, hrp.CFrame * CFrame.new(0, 5, 0), Vector3.zero)
+							end)
+							task.wait(0.5)
+						else
+							local holdPart = toy:FindFirstChild("HoldPart")
+							if holdPart then
+								pcall(function()
+									holdPart.HoldItemRemoteFunction:InvokeServer(toy, char)
+									task.wait(0.05)
+									holdPart.DropItemRemoteFunction:InvokeServer(toy, hrp.CFrame * CFrame.new(0, 2000, 0), Vector3.zero)
+								end)
+							end
+						end
+					end
+					task.wait(0.1)
+				end
+			end)
+		end
+	end
+})
+
+-- Anti Paint
+local paintPartsBackup = {}
+local paintConnections = {}
+local function deleteAllPaintParts()
+	for _, obj in ipairs(Workspace:GetDescendants()) do
+		if obj:IsA("BasePart") and obj.Name == "PaintPlayerPart" then
+			paintPartsBackup[obj] = obj:Clone()
+			obj:Destroy()
+		end
+	end
+end
+local function restorePaintParts()
+	for _, data in pairs(paintPartsBackup) do
+		if data and data.Parent == nil then data.Parent = Workspace end
+	end
+	paintPartsBackup = {}
+end
+local function watchNewPaintParts()
+	table.insert(paintConnections, Workspace.DescendantAdded:Connect(function(obj)
+		if obj:IsA("BasePart") and obj.Name == "PaintPlayerPart" then
+			task.defer(function()
+				if obj and obj.Parent then
+					paintPartsBackup[obj] = obj:Clone()
+					obj:Destroy()
+				end
+			end)
+		end
+	end))
+end
+local function disconnectWatchers()
+	for _, conn in ipairs(paintConnections) do
+		if conn.Connected then conn:Disconnect() end
+	end
+	paintConnections = {}
+end
+local function setTouchQuery(state)
+	local char = Workspace:FindFirstChild(LocalPlayer.Name)
+	if not char then return end
+	for _, v in pairs(char:GetChildren()) do
+		if v:IsA("Part") or v:IsA("BasePart") then
+			v.CanTouch = state
+			v.CanQuery = state
+		end
+	end
+end
+
+DefenseExtra:AddToggle("PaintDeleteToggle", {
+	Text = "Anti Paint",
+	Default = false,
+	Callback = function(state)
+		if state then
+			deleteAllPaintParts()
+			watchNewPaintParts()
+			setTouchQuery(false)
+		else
+			restorePaintParts()
+			disconnectWatchers()
+			setTouchQuery(true)
+		end
+	end
+})
+
+-- Anti Gucci (Blobman)
+local autoGucciActive = false
+local antiGucciConnection
+local safePosition
+local restoreFrames = 0
+
+local function spawnBlobman()
+	pcall(function()
+		RS.MenuToys.SpawnToyRemoteFunction:InvokeServer("CreatureBlobman", CFrame.new(0, 5000000, 0), Vector3.new(0, 60, 0))
 	end)
-    ]=];
-    ["orion_lib.lua"] = [=[
-	for _, UI in ipairs(game.CoreGui:GetChildren()) do
-		if UI.Name == "BetterOrion" then 
-			UI:Destroy() 
+end
+
+local function startAntiGucci()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hum = char:WaitForChild("Humanoid")
+	local root = char:WaitForChild("HumanoidRootPart")
+	safePosition = root.Position
+	
+	local folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+	local blob = folder and folder:FindFirstChild("CreatureBlobman")
+	local seat = blob and blob:FindFirstChild("VehicleSeat")
+	
+	if not blob then
+		spawnBlobman()
+		task.wait(1)
+		folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+		blob = folder and folder:FindFirstChild("CreatureBlobman")
+		seat = blob and blob:FindFirstChild("VehicleSeat")
+	end
+	
+	if seat and seat:IsA("VehicleSeat") then
+		root.CFrame = seat.CFrame + Vector3.new(0, 2, 0)
+		seat:Sit(hum)
+	end
+	
+	if antiGucciConnection then antiGucciConnection:Disconnect() end
+	antiGucciConnection = R.Heartbeat:Connect(function()
+		if not root or not hum then return end
+		RS.CharacterEvents.RagdollRemote:FireServer(root, 0)
+		if restoreFrames > 0 then
+			root.CFrame = CFrame.new(safePosition)
+			restoreFrames = restoreFrames - 1
+		end
+	end)
+end
+
+local function stopAntiGucci()
+	if antiGucciConnection then antiGucciConnection:Disconnect() end
+	local folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+	if folder and folder:FindFirstChild("CreatureBlobman") then
+		folder.CreatureBlobman:Destroy()
+	end
+end
+
+DefenseExtra:AddToggle("AutoGucciToggle", {
+	Text = "Anti Gucci (Blobman)",
+	Default = false,
+	Callback = function(Value)
+		autoGucciActive = Value
+		if Value then
+			startAntiGucci()
+			task.spawn(function()
+				while autoGucciActive do
+					local folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+					local blob = folder and folder:FindFirstChild("CreatureBlobman")
+					if not blob then
+						stopAntiGucci()
+						spawnBlobman()
+						task.wait(1)
+						if autoGucciActive then startAntiGucci() end
+					end
+					task.wait(0.5)
+				end
+			end)
+		else
+			stopAntiGucci()
 		end
 	end
+})
 
-	local UserInputService = game:GetService("UserInputService")
-	lo
+-- Anti Gucci (Train)
+local autoGucciTrainActive = false
+local antiGucciTrainConn
+local safePositionTrain
+local restoreFramesTrain = 0
 
-cal TweenService = game:GetService("TweenService")
-	local RunService = game:GetService("RunService")
-	local LocalPlayer = game:GetService("Players").LocalPlayer
-	local Mouse = LocalPlayer:GetMouse()
-	local HttpService = game:GetService("HttpService")
-	local CoreGui = game:GetService("CoreGui")
+local function startAntiGucciTrain()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hum = char:WaitForChild("Humanoid")
+	local root = char:WaitForChild("HumanoidRootPart")
+	safePositionTrain = root.Position
+	
+	local folder = workspace.Map.AlwaysHereTweenedObjects
+	local train = folder and folder:FindFirstChild("Train")
+	local seat
+	if train then
+		for _, d in pairs(train:GetDescendants()) do
+			if d:IsA("Seat") then seat = d break end
+		end
+	end
+	
+	if seat then
+		root.CFrame = seat.CFrame + Vector3.new(0, 2, 0)
+		seat:Sit(hum)
+	end
+	
+	if antiGucciTrainConn then antiGucciTrainConn:Disconnect() end
+	antiGucciTrainConn = R.Heartbeat:Connect(function()
+		if not root or not hum then return end
+		RS.CharacterEvents.RagdollRemote:FireServer(root, 0)
+		if restoreFramesTrain > 0 then
+			root.CFrame = CFrame.new(safePositionTrain)
+			restoreFramesTrain = restoreFramesTrain - 1
+		end
+	end)
+end
 
-	local OrionLib = {
-		Elements = {},
-		UIElements = {},
-		ThemeObjects = {},
-		Connections = {},
-		Flags = {},
-		Themes = {
-			Default = {
-				Main = Color3.fromRGB(100, 100, 100),
-				Stroke = Color3.fromRGB(100, 100, 100),
-				Divider = Color3.fromRGB(50, 50, 50),
-				Text = Color3.fromRGB(255, 255, 255),
-				TextDark = Color3.fromRGB(200, 200, 200),
-			Elements = Color3.fromRGB(80, 80, 80),
-				MainTransparency = 0.35,
-				ElementsTransparency = 0.5,
-			},
-		},
-		SelectedTheme = "Default",
-		Folder = nil,
-	}
+local function stopAntiGucciTrain()
+	if antiGucciTrainConn then antiGucciTrainConn:Disconnect() end
+	local trainFolder = workspace.Map.AlwaysHereTweenedObjects
+	if trainFolder and trainFolder:FindFirstChild("Train") then
+		LocalPlayer.Character.Humanoid.Health = 0
+	end
+end
 
-	-- Icons
-		local Icons = {}
-		local LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/m1kp0/BetterOrion/refs/heads/main/Icons.lua"))().assets
+DefenseExtra:AddToggle("AutoGucciTrainToggle", {
+	Text = "Anti Gucci (Train)",
+	Default = false,
+	Callback = function(Value)
+		autoGucciTrainActive = Value
+		if Value then startAntiGucciTrain() else stopAntiGucciTrain() end
+	end
+})
 
-	-- Core
-		local Orion = Instance.new("ScreenGui")
-		Orion.Name = "BetterOrion"
-		if syn then
-			syn.protect_gui(Orion)
-			Orion.Parent = game.CoreGui
+-- Anti Kick (Shuriken)
+DefenseExtra:AddToggle("ShurikenAntiKick", {
+	Text = "Anti Kick",
+	Default = false,
+	Callback = function(Value)
+		_G.ShurikenAntiKick = Value
+		if Value then
+			task.spawn(function()
+				local setOwner = RS:WaitForChild("GrabEvents"):WaitForChild("SetNetworkOwner")
+				local stickyEvent = RS:WaitForChild("PlayerEvents"):WaitForChild("StickyPartEvent")
+				local spawnRemote = RS.MenuToys.SpawnToyRemoteFunction
+				local destroyrem = RS.MenuToys.DestroyToy
+				local canSpawn = LocalPlayer:WaitForChild("CanSpawnToy")
+				
+				local function getHRP()
+					if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+						return LocalPlayer.Character.HumanoidRootPart
+					end
+					return LocalPlayer.CharacterAdded:Wait():WaitForChild("HumanoidRootPart")
+				end
+				
+				local function CheckForHome()
+					if not workspace.PlotItems.PlayersInPlots:FindFirstChild(LocalPlayer.Name) then
+						return false
+					end
+					for _, v in pairs(workspace.Plots:GetChildren()) do
+						local sign = v:FindFirstChild("PlotSign")
+						local owners = sign and sign:FindFirstChild("ThisPlotsOwners")
+						if owners then
+							for _, b in pairs(owners:GetChildren()) do
+								if b.Value == LocalPlayer.Name then
+									local folder = workspace.PlotItems:FindFirstChild(v.Name)
+									if folder then return true, folder end
+								end
+							end
+						end
+					end
+					return false
+				end
+				
+				local function StickKunai(kunai)
+					if not kunai or not kunai:FindFirstChild("StickyPart") then return end
+					local hrp = getHRP()
+					if not hrp then return end
+					
+					if kunai:FindFirstChild("SoundPart") then
+						if not kunai.SoundPart:FindFirstChild("PartOwner") or kunai.SoundPart.PartOwner.Value ~= LocalPlayer.Name then
+							setOwner:FireServer(kunai.SoundPart, kunai.SoundPart.CFrame)
+						end
+					end
+					
+					local firePart = hrp:FindFirstChild("FirePlayerPart") or hrp:WaitForChild("FirePlayerPart", 5)
+					if firePart then
+						stickyEvent:FireServer(kunai.StickyPart, firePart, CFrame.new(0, 0, 0) * CFrame.Angles(0, math.rad(90), math.rad(90)))
+					end
+					
+					for _, obj in pairs(kunai:GetChildren()) do
+						if obj.Name == "Pyramid" then
+							obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false
+						elseif obj.Name == "Main" then
+							obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false
+						elseif obj:IsA("BasePart") then
+							obj.CanTouch = false; obj.CanCollide = false; obj.CanQuery = false
+						end
+					end
+				end
+				
+				local function ClearKunai()
+					local inv = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+					if inv and destroyrem then
+						for _, v in pairs(inv:GetChildren()) do
+							if v.Name == "AntiKick" or v.Name == "NinjaShuriken" then
+								pcall(function() destroyrem:FireServer(v) end)
+							end
+						end
+					end
+				end
+				
+				while _G.ShurikenAntiKick do
+					task.wait(0.005)
+					local char = LocalPlayer.Character
+					if not char or not char:FindFirstChild("Humanoid") or char.Humanoid.Health <= 0 then continue end
+					
+					local inv = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+					local kunai = inv and inv:FindFirstChild("NinjaShuriken")
+					
+					if workspace.PlotItems.PlayersInPlots:FindFirstChild(LocalPlayer.Name) then
+						local boolik, house = CheckForHome()
+						if boolik and house and workspace.Plots:FindFirstChild(house.Name) then
+							local sign = workspace.Plots[house.Name]:FindFirstChild("PlotSign")
+							if sign and sign.ThisPlotsOwners.Value.TimeRemainingNum.Value > 89 then
+								local hrp = getHRP()
+								if hrp then
+									pcall(function()
+										spawnRemote:InvokeServer("NinjaShuriken", hrp.CFrame * CFrame.new(0, 12, 20), Vector3.zero)
+									end)
+									task.wait(0.5)
+									inv = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+									kunai = inv and inv:FindFirstChild("NinjaShuriken")
+									if kunai then
+										kunai.Name = "AntiKick"
+										StickKunai(kunai)
+									end
+								end
+							end
+						end
+					end
+					
+					if not kunai then
+						if workspace.PlotItems.PlayersInPlots:FindFirstChild(LocalPlayer.Name) then continue end
+						local hrp = getHRP()
+						if hrp then
+							pcall(function()
+								spawnRemote:InvokeServer("NinjaShuriken", hrp.CFrame * CFrame.new(0, 12, 20), Vector3.zero)
+							end)
+							task.wait(0.5)
+							inv = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+							kunai = inv and inv:FindFirstChild("NinjaShuriken")
+							if kunai then
+								kunai.Name = "AntiKick"
+								StickKunai(kunai)
+							end
+						end
+					end
+					
+					if kunai and kunai:FindFirstChild("StickyPart") and kunai.StickyPart.CanTouch == true then
+						StickKunai(kunai)
+						kunai.Name = "AntiKick"
+					end
+					
+					if not kunai or not kunai:FindFirstChild("StickyPart") or not char or not char:FindFirstChild("HumanoidRootPart") or (char.HumanoidRootPart.Position - kunai.StickyPart.Position).Magnitude >= 20 then
+						ClearKunai()
+					end
+					task.wait(0.3)
+				end
+				ClearKunai()
+			end)
 		else
-			Orion.Parent = game.CoreGui
-		end
-
-		function OrionLib:IsRunning()
-			return Orion.Parent == game.CoreGui
-		end
-
-	-- Local functions --
-		local function GetOrionIcon(IconName)
-			if Icons[IconName] ~= nil then return Icons[IconName] else return nil end
-		end   
-		local function GetLucideIcon(IconName)
-			if IconName ~= nil then
-				return LucideIcons["lucide-"..IconName]
-			else 
-				return nil 
+			_G.ShurikenAntiKick = false
+			local inv = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+			local destroyrem = RS.MenuToys.DestroyToy
+			if inv and destroyrem then
+				for _, v in pairs(inv:GetChildren()) do
+					if v.Name == "AntiKick" or v.Name == "NinjaShuriken" then
+						pcall(function() destroyrem:FireServer(v) end)
+					end
+				end
 			end
 		end
+	end
+})
 
-		local function AddConnection(Signal, Function)
-			if (not OrionLib:IsRunning()) then return end
-			local SignalConnect = Signal:Connect(Function)
-			table.insert(OrionLib.Connections, SignalConnect)
-			return SignalConnect
+-- Loop TP
+local tpActive = false
+DefenseExtra:AddToggle("LoopTP", {
+	Text = "Loop TP",
+	Default = false,
+	Callback = function(Value)
+		tpActive = Value
+		local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+		local hrp = char:WaitForChild("HumanoidRootPart")
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		if Value then
+			if hum then hum.PlatformStand = true end
+			task.spawn(function()
+				while tpActive and hrp do
+					local x = math.random(-500, 500)
+					local y = math.random(30, 480)
+					local z = math.random(-500, 500)
+					hrp.CFrame = CFrame.new(x, y, z)
+					task.wait(0.03)
+				end
+			end)
+		else
+			if hum then hum.PlatformStand = false end
 		end
+	end
+})
 
+-- =====================================================
+-- TARGET TAB (полностью)
+-- =====================================================
+local TargetGroup = Tabs.Target:AddLeftGroupbox("Target Interaction")
+local BlobGroup = Tabs.Target:AddRightGroupbox("Blobman Kick")
+local WhitelistGroup = Tabs.Target:AddRightGroupbox("Whitelist")
+
+local selectedKickPlayer = nil
+local kickLoopEnabled = false
+local savedKickPos = nil
+local currentKickTargetChar = nil
+
+TargetGroup:AddDropdown("KickPlayerDropdown", {
+	Values = getPlayerList(),
+	Default = 1,
+	Multi = false,
+	Text = "Select Target",
+	Callback = function(Value)
+		selectedKickPlayer = getPlayerFromSelection(Value)
+	end
+})
+
+TargetGroup:AddButton({
+	Text = "Refresh List",
+	Func = function()
+		Options.KickPlayerDropdown:SetValues(getPlayerList())
+	end
+})
+
+-- Kick (spam grab)
+TargetGroup:AddToggle("LoopKickGrabToggle", {
+	Text = "Kick (spam grab)",
+	Default = false,
+	Callback = function(on)
+		kickLoopEnabled = on
+		if not on then return end
 		task.spawn(function()
-			while (OrionLib:IsRunning()) do wait() end
-			for _, Connection in next, OrionLib.Connections do Connection:Disconnect() end
+			local GE = RS:WaitForChild("GrabEvents")
+			local myChar = LocalPlayer.Character
+			local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+			if not myRoot then Toggles.LoopKickGrabToggle:SetValue(false) return end
+			local savedPos = myRoot.CFrame
+			local dragging = false
+			local grabStart = 0
+			
+			while kickLoopEnabled do
+				local target = selectedKickPlayer
+				if not target or not target.Parent then break end
+				myChar = LocalPlayer.Character
+				myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+				if not myRoot then break end
+				local tChar = target.Character
+				local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+				local tHum = tChar and tChar:FindFirstChild("Humanoid")
+				if tRoot and tHum and tHum.Health > 0 then
+					tRoot.AssemblyLinearVelocity = Vector3.zero
+					tRoot.AssemblyAngularVelocity = Vector3.zero
+					if not dragging then
+						myRoot.CFrame = tRoot.CFrame
+						pcall(function()
+							tHum.PlatformStand = true
+							tHum.Sit = true
+							GE.SetNetworkOwner:FireServer(tRoot, myRoot.CFrame)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+						if grabStart == 0 then grabStart = tick() end
+						if tick() - grabStart > 0.35 then
+							dragging = true
+							grabStart = 0
+						end
+					else
+						myRoot.CFrame = savedPos
+						local lockPos = savedPos * CFrame.new(0, 17, 0)
+						tRoot.CFrame = lockPos
+						tRoot.Velocity = Vector3.zero
+						pcall(function()
+							tHum.PlatformStand = true
+							GE.SetNetworkOwner:FireServer(tRoot, lockPos)
+							GE.DestroyGrabLine:FireServer(tRoot)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+					end
+				else
+					dragging = false
+					grabStart = 0
+				end
+				R.Heartbeat:Wait()
+			end
+			if myRoot then myRoot.CFrame = savedPos end
+			kickLoopEnabled = false
+			Toggles.LoopKickGrabToggle:SetValue(false)
 		end)
+	end
+})
 
-		local function Create(Name, Properties, Children)
-			local Object = Instance.new(Name)
-			for i, v in next, Properties or {} do Object[i] = v end
-			for i, v in next, Children or {} do v.Parent = Object end
-			return Object
+-- Ragdoll Snowball
+TargetGroup:AddToggle("RagdollSnowballKick", {
+	Text = "Ragdoll Snowball",
+	Default = false,
+	Callback = function(on)
+		if on then
+			task.spawn(function()
+				local spawnRemote = RS.MenuToys:WaitForChild("SpawnToyRemoteFunction")
+				while on do
+					local target = selectedKickPlayer
+					if not target or not target.Parent then task.wait(0.1) continue end
+					local tChar = target.Character
+					local torso = tChar and (tChar:FindFirstChild("UpperTorso") or tChar:FindFirstChild("Torso"))
+					if torso then
+						pcall(function()
+							local offset = Vector3.new(math.random(-30,30)/100, math.random(-30,30)/100, math.random(-30,30)/100)
+							spawnRemote:InvokeServer("BallSnowball", torso.CFrame * CFrame.new(offset), Vector3.zero)
+						end)
+						local folder = workspace:FindFirstChild(LocalPlayer.Name .. "SpawnedInToys")
+						if folder then
+							for _, snowball in pairs(folder:GetChildren()) do
+								if snowball.Name == "BallSnowball" then
+									local part = snowball.PrimaryPart or snowball:FindFirstChildWhichIsA("BasePart")
+									if part then
+										part.CFrame = torso.CFrame * CFrame.new(0, 0, 0)
+										part.AssemblyLinearVelocity = Vector3.zero
+									end
+								end
+							end
+						end
+					end
+					task.wait(0.05)
+				end
+			end)
 		end
+	end
+})
 
-		local function CreateElement(ElementName, ElementFunction)
-			OrionLib.Elements[ElementName] = function(...) return ElementFunction(...) end
+-- Kick (ragdoll grab)
+TargetGroup:AddToggle("LoopKickRagdollToggle", {
+	Text = "Kick (ragdoll grab)",
+	Default = false,
+	Callback = function(on)
+		kickLoopEnabled = on
+		if not on then return end
+		task.spawn(function()
+			local GE = RS:WaitForChild("GrabEvents")
+			local myChar = LocalPlayer.Character
+			local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+			if not myRoot then Toggles.LoopKickRagdollToggle:SetValue(false) return end
+			local savedPos = myRoot.CFrame
+			local dragging = false
+			local grabStart = 0
+			
+			while kickLoopEnabled do
+				local target = selectedKickPlayer
+				if not target or not target.Parent then break end
+				myChar = LocalPlayer.Character
+				myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+				if not myRoot then break end
+				local tChar = target.Character
+				local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+				local tHum = tChar and tChar:FindFirstChild("Humanoid")
+				if tRoot and tHum and tHum.Health > 0 then
+					tRoot.AssemblyLinearVelocity = Vector3.zero
+					tRoot.AssemblyAngularVelocity = Vector3.zero
+					if not dragging then
+						myRoot.CFrame = tRoot.CFrame
+						pcall(function()
+							tHum.PlatformStand = true
+							tHum.Sit = true
+							GE.SetNetworkOwner:FireServer(tRoot, myRoot.CFrame)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+						if grabStart == 0 then grabStart = tick() end
+						if tick() - grabStart > 0.15 then
+							dragging = true
+							grabStart = 0
+							myRoot.CFrame = savedPos
+						end
+					else
+						local lockCFrame = CFrame.new(savedPos.Position + Vector3.new(0, 7, 0)) * CFrame.Angles(math.rad(math.random(-180,180)), math.rad(math.random(-180,180)), math.rad(math.random(-180,180)))
+						tRoot.CFrame = tRoot.CFrame:Lerp(lockCFrame, 0.2)
+						tRoot.Velocity = Vector3.zero
+						pcall(function()
+							tHum.PlatformStand = true
+							tHum.Sit = false
+							GE.SetNetworkOwner:FireServer(tRoot, tRoot.CFrame)
+							GE.DestroyGrabLine:FireServer(tRoot)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+					end
+				else
+					dragging = false
+					grabStart = 0
+				end
+				R.Heartbeat:Wait()
+			end
+			if myRoot then myRoot.CFrame = savedPos end
+			kickLoopEnabled = false
+			Toggles.LoopKickRagdollToggle:SetValue(false)
+		end)
+	end
+})
+
+-- Grab Troll (spam grab)
+TargetGroup:AddToggle("GrabTrollToggle", {
+	Text = "Grab Troll (spam grab)",
+	Default = false,
+	Callback = function(on)
+		kickLoopEnabled = on
+		if not on then return end
+		task.spawn(function()
+			local GE = RS:WaitForChild("GrabEvents")
+			local myChar = LocalPlayer.Character
+			local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+			if not myRoot then Toggles.GrabTrollToggle:SetValue(false) return end
+			local savedPos = myRoot.CFrame
+			local dragging = false
+			local grabStart = 0
+			
+			local function IsRagdolled(hum)
+				local r = hum and hum:FindFirstChild("Ragdolled")
+				return r ~= nil and r.Value == true
+			end
+			
+			while kickLoopEnabled do
+				local target = selectedKickPlayer
+				if not target or not target.Parent then break end
+				myChar = LocalPlayer.Character
+				myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+				if not myRoot then break end
+				local tChar = target.Character
+				local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+				local tHum = tChar and tChar:FindFirstChild("Humanoid")
+				if tRoot and tHum and tHum.Health > 0 then
+					tRoot.AssemblyLinearVelocity = Vector3.zero
+					tRoot.AssemblyAngularVelocity = Vector3.zero
+					if not dragging then
+						myRoot.CFrame = tRoot.CFrame
+						pcall(function()
+							tHum.PlatformStand = true
+							tHum.Sit = true
+							GE.SetNetworkOwner:FireServer(tRoot, myRoot.CFrame)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+						if grabStart == 0 then grabStart = tick() end
+						if tick() - grabStart > 0.35 then
+							dragging = true
+							grabStart = 0
+						end
+					else
+						if not IsRagdolled(tHum) then
+							dragging = false
+							grabStart = 0
+							pcall(function() GE.DestroyGrabLine:FireServer(tRoot) end)
+							R.Heartbeat:Wait()
+							continue
+						end
+						myRoot.CFrame = savedPos
+						local lockPos = savedPos * CFrame.new(0, 17, 0)
+						tRoot.CFrame = lockPos
+						tRoot.Velocity = Vector3.zero
+						pcall(function()
+							tHum.PlatformStand = true
+							GE.SetNetworkOwner:FireServer(tRoot, lockPos)
+							GE.DestroyGrabLine:FireServer(tRoot)
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+					end
+				else
+					dragging = false
+					grabStart = 0
+				end
+				R.Heartbeat:Wait()
+			end
+			if myRoot then myRoot.CFrame = savedPos end
+			kickLoopEnabled = false
+			Toggles.GrabTrollToggle:SetValue(false)
+		end)
+	end
+})
+
+-- Loop Kick (grab + blob)
+TargetGroup:AddToggle("LoopKickToggle", {
+	Text = "Loop Kick (grab + blob)",
+	Default = false,
+	Callback = function(on)
+		kickLoopEnabled = on
+		local target = selectedKickPlayer
+		if on and not target then Toggles.LoopKickToggle:SetValue(false) return end
+		local char = LocalPlayer.Character
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		if on and (not seat or seat.Parent.Name ~= "CreatureBlobman") then
+			Toggles.LoopKickToggle:SetValue(false)
+			return
 		end
+		if not on then kickLoopEnabled = false return end
+		
+		task.spawn(function()
+			local GE = RS:WaitForChild("GrabEvents")
+			local blob = seat.Parent
+			local blobRoot = blob:FindFirstChild("HumanoidRootPart") or blob.PrimaryPart
+			local scriptObj = blob:FindFirstChild("BlobmanSeatAndOwnerScript")
+			local CG = scriptObj and scriptObj:FindFirstChild("CreatureGrab")
+			local CD = scriptObj and scriptObj:FindFirstChild("CreatureDrop")
+			local R_Det = blob:FindFirstChild("RightDetector")
+			local R_Weld = R_Det and (R_Det:FindFirstChild("RightWeld") or R_Det:FindFirstChildWhichIsA("Weld"))
+			local SavedPos = blobRoot.CFrame
+			local tChar = target.Character
+			local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+			
+			if tRoot and blobRoot then
+				local bringStart = tick()
+				while tick() - bringStart < 0.35 and kickLoopEnabled do
+					blobRoot.CFrame = tRoot.CFrame
+					blobRoot.Velocity = Vector3.zero
+					pcall(function()
+						if CG and R_Det then CG:FireServer(R_Det, tRoot, R_Weld) end
+						GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						GE.SetNetworkOwner:FireServer(tRoot, blobRoot.CFrame)
+					end)
+					R.Heartbeat:Wait()
+				end
+				blobRoot.CFrame = SavedPos
+				task.wait(0.05)
+			end
+			
+			local packetTimer = 0
+			while kickLoopEnabled do
+				if not target or not target.Parent or not target.Character then break end
+				tChar = target.Character
+				tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+				local tHum = tChar and tChar:FindFirstChild("Humanoid")
+				if tRoot and tHum and tHum.Health > 0 and blobRoot then
+					blobRoot.CFrame = SavedPos
+					local lockPos = SavedPos * CFrame.new(0, 23, 0)
+					tRoot.CFrame = lockPos
+					tRoot.Velocity = Vector3.zero
+					if tick() - packetTimer > 0.05 then
+						packetTimer = tick()
+						pcall(function()
+							tHum.PlatformStand = true
+							tHum.Sit = true
+							GE.SetNetworkOwner:FireServer(tRoot, lockPos)
+							if R_Det then
+								local weld = R_Det:FindFirstChild("RightWeld") or R_Det:FindFirstChildWhichIsA("Weld")
+								if weld then CD:FireServer(weld) end
+							end
+							GE.DestroyGrabLine:FireServer(tRoot)
+							if R_Det then CG:FireServer(R_Det, tRoot, R_Weld) end
+							GE.CreateGrabLine:FireServer(tRoot, Vector3.zero, tRoot.Position, false)
+						end)
+					end
+				end
+				R.Heartbeat:Wait()
+			end
+			kickLoopEnabled = false
+			Toggles.LoopKickToggle:SetValue(false)
+			if blobRoot then blobRoot.CFrame = SavedPos end
+		end)
+	end
+})
 
-		local function MakeElement(ElementName, ...)
-			local NewElement = OrionLib.Elements[ElementName](...)
-			return NewElement
+-- Dual Hand Loop Kick
+local loopKickDualActive = false
+TargetGroup:AddToggle("DualHandLoopKick", {
+	Text = "Dual Hand Loop Kick",
+	Default = false,
+	Callback = function(on)
+		loopKickDualActive = on
+		if on then
+			if not selectedKickPlayer then notify("Error", "Select target first", 3) Toggles.DualHandLoopKick:SetValue(false) return end
+			task.spawn(function()
+				local lastTargetCharDual = nil
+				local bp = nil
+				while loopKickDualActive do
+					local target = selectedKickPlayer
+					local char = LocalPlayer.Character
+					local hum = char and char:FindFirstChild("Humanoid")
+					local seat = hum and hum.SeatPart
+					if not seat or not target or not target.Parent then task.wait(0.5) continue end
+					local seatParent = seat.Parent
+					local grab = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureGrab")
+					local drop = seatParent:FindFirstChild("BlobmanSeatAndOwnerScript") and seatParent.BlobmanSeatAndOwnerScript:FindFirstChild("CreatureDrop")
+					if not grab or not drop then task.wait(0.5) continue end
+					local leftDet = seatParent:FindFirstChild("LeftDetector")
+					local rightDet = seatParent:FindFirstChild("RightDetector")
+					local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+					local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+					local hrp = char:FindFirstChild("HumanoidRootPart")
+					local targetChar = target.Character
+					local targetHRP = targetChar and targetChar:FindFirstChild("HumanoidRootPart")
+					local targetHum = targetChar and targetChar:FindFirstChild("Humanoid")
+					
+					if targetHRP and targetHum and targetHum.Health > 0 then
+						if targetChar ~= lastTargetCharDual then
+							lastTargetCharDual = targetChar
+							if bp then bp:Destroy() end
+							if hrp then hrp.CFrame = targetHRP.CFrame * CFrame.new(0, 25, 0) end
+							task.wait(0.2)
+							grab:FireServer(leftDet, targetHRP, leftWeld)
+							task.wait(0.3)
+							drop:FireServer(leftWeld, targetHRP)
+							task.wait(0.1)
+							bp = Instance.new("BodyPosition")
+							bp.Position = Vector3.new(0, 999999, 0)
+							bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+							bp.Parent = targetHRP
+							grab:FireServer(leftDet, targetHRP, leftWeld)
+							task.wait(0.2)
+							drop:FireServer(leftWeld, targetHRP)
+						end
+						grab:FireServer(leftDet, targetHRP, leftWeld)
+						task.wait()
+						drop:FireServer(leftWeld, targetHRP)
+						task.wait()
+						grab:FireServer(rightDet, targetHRP, rightWeld)
+						task.wait()
+						drop:FireServer(rightWeld, targetHRP)
+						task.wait()
+						grab:FireServer(leftDet, targetHRP, leftWeld)
+						grab:FireServer(rightDet, targetHRP, rightWeld)
+						task.wait()
+						drop:FireServer(leftWeld, targetHRP)
+						drop:FireServer(rightWeld, targetHRP)
+					end
+					task.wait()
+				end
+				if bp then bp:Destroy() end
+			end)
 		end
+	end
+})
 
-		local function SetProps(Element, Props)
-			table.foreach(Props, function(Property, Value) Element[Property] = Value end)
-			return Element
+-- Fling
+local playerFlingActive = false
+local flingBAV = nil
+local originalPos = nil
+TargetGroup:AddToggle("PlayerFlingBtn", {
+	Text = "Fling",
+	Default = false,
+	Callback = function(on)
+		playerFlingActive = on
+		if on and selectedKickPlayer then
+			task.spawn(function()
+				while playerFlingActive do
+					local target = selectedKickPlayer
+					local char = LocalPlayer.Character
+					local hrp = char and char:FindFirstChild("HumanoidRootPart")
+					if not hrp then task.wait(0.5) continue end
+					if not originalPos then originalPos = hrp.CFrame end
+					local tChar = target and target.Character
+					local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+					local tHum = tChar and tChar:FindFirstChild("Humanoid")
+					if tRoot and tHum and tHum.Health > 0 then
+						if not flingBAV or flingBAV.Parent ~= hrp then
+							if flingBAV then flingBAV:Destroy() end
+							flingBAV = Instance.new("BodyAngularVelocity", hrp)
+							flingBAV.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+							flingBAV.AngularVelocity = Vector3.new(0, 10000, 0)
+							flingBAV.P = 10000
+						end
+						for _, part in pairs(char:GetDescendants()) do
+							if part:IsA("BasePart") then part.CanCollide = false end
+						end
+						local loop = R.Heartbeat:Connect(function()
+							if not playerFlingActive or not tRoot or not tRoot.Parent then return end
+							hrp.CFrame = tRoot.CFrame
+							hrp.Velocity = Vector3.zero
+						end)
+						local start = tick()
+						while tick() - start < 1.5 and playerFlingActive and tRoot and tRoot.Parent do
+							task.wait(0.05)
+						end
+						if loop then loop:Disconnect() end
+						if flingBAV then flingBAV:Destroy() end
+						for _, part in pairs(char:GetDescendants()) do
+							if part:IsA("BasePart") then part.CanCollide = true end
+						end
+						if hrp and originalPos then
+							hrp.CFrame = originalPos
+							hrp.RotVelocity = Vector3.zero
+							hrp.Velocity = Vector3.zero
+						end
+					end
+					task.wait(0.1)
+				end
+				if flingBAV then flingBAV:Destroy() end
+			end)
 		end
+	end
+})
 
-		local function SetChildren(Element, Children)
-			table.foreach(Children, function(_, Child) Child.Parent = Element end)
-			return Element
+-- Destroy Gucci (sit)
+local DestroyTargetGucciActive = false
+TargetGroup:AddToggle("DestroyTargetGucci", {
+	Text = "Destroy Gucci (sit)",
+	Default = false,
+	Callback = function(Value)
+		DestroyTargetGucciActive = Value
+		if Value and selectedKickPlayer then
+			task.spawn(function()
+				local folderName = selectedKickPlayer.Name .. "SpawnedInToys"
+				while DestroyTargetGucciActive do
+					local toysFolder = workspace:FindFirstChild(folderName)
+					if toysFolder then
+						for _, obj in pairs(toysFolder:GetChildren()) do
+							if obj.Name == "CreatureBlobman" then
+								local seat = obj:FindFirstChild("VehicleSeat") or obj:FindFirstChildWhichIsA("VehicleSeat", true)
+								if seat then
+									local myChar = LocalPlayer.Character
+									local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+									local myHum = myChar and myChar:FindFirstChild("Humanoid")
+									if myRoot and myHum then
+										local magnetConnection
+										magnetConnection = R.Stepped:Connect(function()
+											if myRoot and seat then
+												myRoot.CFrame = seat.CFrame
+												myRoot.Velocity = Vector3.zero
+												if obj.PrimaryPart then
+													obj.PrimaryPart.Velocity = Vector3.zero
+												end
+											end
+										end)
+										local sitStart = tick()
+										while tick() - sitStart < 1 and DestroyTargetGucciActive do
+											if myHum.SeatPart == seat then break end
+											seat:Sit(myHum)
+											task.wait()
+										end
+										if magnetConnection then magnetConnection:Disconnect() end
+										if myHum.SeatPart == seat then
+											task.wait(0.3)
+											myHum.Sit = false
+											myHum.Jump = true
+											task.wait(0.05)
+											myRoot.CFrame = originalPos or myRoot.CFrame
+										end
+									end
+								end
+							end
+						end
+					end
+					task.wait(1)
+				end
+			end)
 		end
+	end
+})
 
-		local function Round(Number, Factor)
-			local Result = math.floor(Number/Factor + (math.sign(Number) * 0.5)) * Factor
-			if Result < 0 then Result = Result + Factor end
-			return Result
+-- Bring
+TargetGroup:AddButton({
+	Text = "Bring",
+	Func = function()
+		if not selectedKickPlayer then return end
+		local char = LocalPlayer.Character
+		local hum = char and char:FindFirstChild("Humanoid")
+		local seat = hum and hum.SeatPart
+		if not seat or seat.Parent.Name ~= "CreatureBlobman" then return end
+		local blob = seat.Parent
+		local blobRoot = blob:FindFirstChild("HumanoidRootPart")
+		local scriptObj = blob:FindFirstChild("BlobmanSeatAndOwnerScript")
+		if not blobRoot or not scriptObj then return end
+		local CG = scriptObj:FindFirstChild("CreatureGrab")
+		local CD = scriptObj:FindFirstChild("CreatureDrop")
+		local R_Det = blob:FindFirstChild("RightDetector")
+		local R_Weld = R_Det and R_Det:FindFirstChild("RightWeld")
+		local tChar = selectedKickPlayer.Character
+		local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+		if not tRoot then return end
+		local home = blobRoot.CFrame
+		blobRoot.CFrame = tRoot.CFrame
+		task.wait(0.3)
+		pcall(function() CG:FireServer(R_Det, tRoot, R_Weld) end)
+		task.wait(0.5)
+		blobRoot.CFrame = home
+		task.wait(0.05)
+		for i = 1, 12 do
+			tRoot.CFrame = home * CFrame.new(0, 3, 0)
+			tRoot.Velocity = Vector3.zero
+			task.wait(0.03)
 		end
-
-		local function ReturnProperty(Object)
-			if Object:IsA("Frame") or Object:IsA("TextButton") then return "BackgroundColor3" end 
-			if Object:IsA("ScrollingFrame") then return "ScrollBarImageColor3" end 
-			if Object:IsA("UIStroke") then return "Color" end 
-			if Object:IsA("TextLabel") or Object:IsA("TextBox") then return "TextColor3" end   
-			if Object:IsA("ImageLabel") or Object:IsA("ImageButton") then return "ImageColor3" end   
+		for i = 1, 8 do
+			local weld = R_Det:FindFirstChild("RightWeld")
+			if weld then pcall(function() CD:FireServer(weld) end) end
+			task.wait(0.03)
 		end
+	end
+})
 
-		local function AddThemeObject(Object, Type)
-			if not OrionLib.ThemeObjects[Type] then OrionLib.ThemeObjects[Type] = {} end    
-			table.insert(OrionLib.ThemeObjects[Type], Object)
-			Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Type]
-			return Object
-		end    
+-- Remove Anti Input Lag (Anti AntiLag)
+local AllowedItems = {
+	FoodHamburger = true, FoodCoconut = true, FoodPizzaCheese = true, FoodPizzaPepperoni = true,
+	FoodHotdog = true, FoodMushroomPoison = true, FoodBread = true, FoodDippyEgg = true,
+	FoodMayonnaise = true, FoodFrenchFries = true, FoodMeatStick = true, FoodDonut = true,
+	FoodCakePink = true, InstrumentGuitarBanjo = true, InstrumentGuitarViolin = true,
+	InstrumentGuitarUkulele = true, InstrumentWoodwindSaxophone = true, InstrumentWoodwindOcarina = true,
+	InstrumentBrassVuvuzelaQwizik = true, InstrumentBrassTrumpet = true, InstrumentDrumBongos = true,
+	InstrumentDrumSnare = true, InstrumentPianoMelodica = true, InstrumentVoiceMicrophone = true,
+	CupMugWhite = true, CupMugBrown = true, PoopPile = true, PoopPileSparkle = true,
+}
+local antiAntiLagEnabled = false
 
-		local function SetTheme()
-			for Name, Type in pairs(OrionLib.ThemeObjects) do
-				for _, Object in pairs(Type) do Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Name] end    
-			end    
+TargetGroup:AddToggle("RemoveAntiInputLag", {
+	Text = "Remove Anti Input Lag",
+	Default = false,
+	Callback = function(on)
+		antiAntiLagEnabled = on
+		if on then
+			task.spawn(function()
+				local char = LocalPlayer.Character
+				local hrp = char and char:FindFirstChild("HumanoidRootPart")
+				if not hrp then return end
+				local items = {}
+				for _, v in ipairs(Workspace:GetDescendants()) do
+					if AllowedItems[v.Name] and v:IsA("Model") and v:FindFirstChild("HoldPart") then
+						table.insert(items, v)
+					end
+				end
+				Workspace.DescendantAdded:Connect(function(obj)
+					if AllowedItems[obj.Name] and obj:IsA("Model") then
+						task.spawn(function()
+							local hp = obj:WaitForChild("HoldPart", 3)
+							if hp then table.insert(items, obj) end
+						end)
+					end
+				end)
+				while antiAntiLagEnabled do
+					for i = #items, 1, -1 do
+						local b = items[i]
+						if not b or not b.Parent or not b:FindFirstChild("HoldPart") then
+							table.remove(items, i)
+						else
+							local hp = b.HoldPart
+							pcall(function()
+								hp.HoldItemRemoteFunction:InvokeServer(b, char)
+							end)
+							task.wait()
+							pcall(function()
+								hp.DropItemRemoteFunction:InvokeServer(b, CFrame.new(hrp.Position + Vector3.new(0, -2000, 0)), Vector3.zero)
+							end)
+						end
+					end
+					task.wait()
+				end
+			end)
 		end
+	end
+})
 
-		local function PackColor(Color)
-			return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
-		end    
+-- Whitelist
+WhitelistGroup:AddDropdown("MultiWhitelist", {
+	Values = getPlayerList(),
+	Default = {},
+	Multi = true,
+	Text = "Whitelist",
+})
+WhitelistGroup:AddButton({
+	Text = "Refresh List",
+	Func = function()
+		Options.MultiWhitelist:SetValues(getPlayerList())
+	end
+})
 
-		local function UnpackColor(Color)
-			return Color3.fromRGB(Color.R,Color.G, Color.B)
-  end
+-- Joined Notify
+local notifyActive = false
+local notifyConnection = nil
+WhitelistGroup:AddToggle("JoinedNotifyBtn", {
+	Text = "Target Joined Notify",
+	Default = false,
+	Callback = function(on)
+		notifyActive = on
+		if on then
+			if notifyConnection then notifyConnection:Disconnect() end
+			notifyConnection = PS.PlayerAdded:Connect(function(newPlayer)
+				if not notifyActive then return end
+				local detected = false
+				local whitelist = Options.MultiWhitelist.Value
+				for nameString, isSelected in pairs(whitelist) do
+					if isSelected then
+						local actualName = nameString:match("%((.-)%)")
+						if actualName == newPlayer.Name then detected = true break end
+					end
+				end
+				if not detected and Options.KickPlayerDropdown and Options.KickPlayerDropdown.Value then
+					local selection = Options.KickPlayerDropdown.Value
+					local selectedName = selection:match("%((.-)%)")
+					if selectedName and selectedName == newPlayer.Name then detected = true end
+				end
+				if detected then
+					notify("Detected", "Target joined: " .. newPlayer.Name, 5)
+					local sound = Instance.new("Sound", workspace)
+					sound.SoundId = "rbxassetid://4590662766"
+					sound.Volume = 2
+					sound:Play()
+					game:GetService("Debris"):AddItem(sound, 3)
+				end
+			end)
+		else
+			if notifyConnection then notifyConnection:Disconnect() end
+		end
+	end
+})
 
-  local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
-  local BlacklistedKeys = {Enum.KeyCode.Unknown,Enum.KeyCode.W,Enum.KeyCode.A,Enum.KeyCode.S,Enum.KeyCode.D,Enum.KeyCode.Up,Enum.KeyCode.Left,Enum.KeyCode.Down,Enum.KeyCode.Right,Enum.KeyCode.Slash,Enum.KeyCode.Backspace,Enum.KeyCode.Escape}
+-- Remove Anti Kick
+local antiAntiKickActive = false
+TargetGroup:AddToggle("DestroyAntiKickToggle", {
+	Text = "Remove Anti Kick",
+	Default = false,
+	Callback = function(Value)
+		antiAntiKickActive = Value
+		if Value then
+			task.spawn(function()
+				local SetNetOwner = RS.GrabEvents.SetNetworkOwner
+				local function CheckAndYeet(toy)
+					local part = toy:FindFirstChild("SoundPart")
+					if part then
+						SetNetOwner:FireServer(part, part.CFrame)
+						if part:FindFirstChild("PartOwner") and part.PartOwner.Value == LocalPlayer.Name then
+							part.CFrame = CFrame.new(0, 1000, 0)
+						end
+					end
+				end
+				while antiAntiKickActive do
+					local target = selectedKickPlayer
+					if target then
+						local spawned = workspace:FindFirstChild(target.Name .. "SpawnedInToys")
+						if spawned then
+							for _, name in pairs({"NinjaKunai", "NinjaShuriken", "AntiKick"}) do
+								local toy = spawned:FindFirstChild(name)
+								if toy then CheckAndYeet(toy) end
+							end
+						end
+					end
+					task.wait(0.1)
+				end
+			end)
+		end
+	end
+})
 
-  local function CheckKey(Table, Key)
-   for _, v in next, Table do
-    if v == Key then return true end
-   end
-  end
+-- =====================================================
+-- GRAB TAB (полностью)
+-- =====================================================
+local GrabGroup = Tabs.Grab:AddLeftGroupbox("Grab Customization")
 
- -- Create Elements -- 
-  CreateElement("Corner", function(Scale, Offset)
-   local Corner = Create("UICorner", {CornerRadius = UDim.new(Scale or 0, Offset or 10)})
-   return Corner
-  end)
+_G.strength = 750
+local strengthConnection
+GrabGroup:AddSlider("ThrowPowerSlider", {
+	Text = "Power",
+	Default = 750,
+	Min = 1,
+	Max = 20000,
+	Rounding = 0,
+	Callback = function(value) _G.strength = value end
+})
 
-  CreateElement("Stroke", function(Color, Thickness)
-   local Stroke = Create("UIStroke", {
-    Color = Color or Color3.fromRGB(255, 255, 255),
-    Thickness = Thickness or 1,
-    Name = "Stroke",
-   })
-   return Stroke
-  end)
+GrabGroup:AddToggle("ThrowStrengthToggle", {
+	Text = "Strength",
+	Default = false,
+	Callback = function(enabled)
+		if enabled then
+			strengthConnection = workspace.ChildAdded:Connect(function(model)
+				if model.Name == "GrabParts" then
+					local part = model.GrabPart.WeldConstraint.Part1
+					if part then
+						local bv = Instance.new("BodyVelocity", part)
+						model:GetPropertyChangedSignal("Parent"):Connect(function()
+							if not model.Parent then
+								if UserInputService:GetLastInputType() == Enum.UserInputType.MouseButton2 then
+									bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+									bv.Velocity = Camera.CFrame.LookVector * _G.strength
+									game:GetService("Debris"):AddItem(bv, 1)
+								else
+									bv:Destroy()
+								end
+							end
+						end)
+					end
+				end
+			end)
+		elseif strengthConnection then
+			strengthConnection:Disconnect()
+		end
+	end
+})
 
-  CreateElement("List", function(Scale, Offset)
-   local List = Create("UIListLayout", {
-    SortOrder = Enum.SortOrder.LayoutOrder,
-    Padding = UDim.new(Scale or 0, Offset or 0)
-   })
-   return List
-  end)
+-- Kill Grab
+local killGrabEnabled = false
+GrabGroup:AddToggle("KillGrabToggle", {
+	Text = "Kill Grab",
+	Default = false,
+	Callback = function(Value)
+		killGrabEnabled = Value
+		if Value then
+			workspace.ChildAdded:Connect(function(v)
+				if v:IsA("Model") and v.Name == "GrabParts" then
+					task.wait(0.05)
+					local gp = v:FindFirstChild("GrabPart")
+					if gp and gp:FindFirstChild("WeldConstraint") then
+						local p1 = gp.WeldConstraint.Part1
+						if p1 and p1.Parent and p1.Parent ~= LocalPlayer.Character then
+							local hum = p1.Parent:FindFirstChildOfClass("Humanoid")
+							if hum then hum.Health = 0 end
+						end
+					end
+				end
+			end)
+		end
+	end
+})
 
-  CreateElement("Padding", function(Bottom, Left, Right, Top)
-   local Padding = Create("UIPadding", {
-    PaddingBottom = UDim.new(0, Bottom or 4),
-    PaddingLeft = UDim.new(0, Left or 4),
-    PaddingRight = UDim.new(0, Right or 4),
-    PaddingTop = UDim.new(0, Top or 4)
-   })
-   return Padding
-  end)
+-- MassLess Grab
+GrabGroup:AddToggle("MassLessGrabToggle", {
+	Text = "MassLess Grab",
+	Default = false,
+	Callback = function(Value)
+		_G.MassLessGrab = Value
+		if Value then
+			_G.MLSense = 200
+			_G.MLConn = R.Heartbeat:Connect(function()
+				local gp = workspace:FindFirstChild("GrabParts")
+				if not gp then return end
+				local dp = gp:FindFirstChild("DragPart")
+				if not dp then return end
+				local ap = dp:FindFirstChild("AlignPosition")
+				local ao = dp:FindFirstChild("AlignOrientation")
+				if ap then
+					ap.Responsiveness = _G.MLSense
+					ap.MaxForce = math.huge
+				end
+				if ao then
+					ao.Responsiveness = _G.MLSense
+					ao.MaxTorque = math.huge
+				end
+			end)
+		elseif _G.MLConn then
+			_G.MLConn:Disconnect()
+		end
+	end
+})
 
-  CreateElement("TFrame", function()
-   local TFrame = Create("Frame", {
-    BackgroundTransparency = 1
-   })
-   return TFrame
-  end)
+-- =====================================================
+-- PLAYER TAB (полностью)
+-- =====================================================
+local PlayerView = Tabs.Player:AddLeftGroupbox("View & Movement")
+local PlayerESP = Tabs.Player:AddRightGroupbox("ESP")
+local PlayerEnv = Tabs.Player:AddLeftGroupbox("Environment")
+local PlayerPerf = Tabs.Player:AddRightGroupbox("Performance")
 
-  CreateElement("Frame", function(Color)
-   local Frame = Create("Frame", {
-    BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
-    BorderSizePixel = 0
-   })
-   return Frame
-  end)
+-- Third Person
+PlayerView:AddToggle("ThirdPersonToggle", {
+	Text = "3rd Person View",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			LocalPlayer.CameraMode = Enum.CameraMode.Classic
+			Camera.CameraType = Enum.CameraType.Custom
+			LocalPlayer.CameraMaxZoomDistance = 999999
+			LocalPlayer.CameraMinZoomDistance = 0.5
+		else
+			LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+			LocalPlayer.CameraMaxZoomDistance = 0
+			LocalPlayer.CameraMinZoomDistance = 0
+		end
+	end
+})
 
-  CreateElement("RoundFrame", function(Color, Scale, Offset)
-   local Frame = Create("Frame", {
-    BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
-    BorderSizePixel = 0
-   }, {
-    Create("UICorner", {CornerRadius = UDim.new(Scale, Offset)})
-   })
-   return Frame
-  end)
+-- Spin
+local spinningConnection
+local spinSpeed = 5
+PlayerView:AddToggle("SpinToggle", {
+	Text = "Spin Character",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			spinningConnection = R.Heartbeat:Connect(function()
+				local root = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+				if root then root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0) end
+			end)
+		elseif spinningConnection then
+			spinningConnection:Disconnect()
+		end
+	end
+})
+PlayerView:AddSlider("SpinSpeed", {
+	Text = "Spin Speed",
+	Default = 5,
+	Min = 1,
+	Max = 50,
+	Rounding = 0,
+	Callback = function(Value) spinSpeed = Value end
+})
 
-  CreateElement("Button", function()
-   local Button = Create("TextButton", {
-    Text = "",
-    AutoButtonColor = false,
-    BackgroundTransparency = 1,
-    BorderSizePixel = 0
-   })
-   return Button
-  end)
+-- Infinite Jump
+local infJump = false
+PlayerView:AddToggle("infJumpToggle", {
+	Text = "Infinite Jump",
+	Default = false,
+	Callback = function(Value) infJump = Value end
+})
+UserInputService.JumpRequest:Connect(function()
+	if infJump then
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+	end
+end)
 
-  CreateElement("ScrollFrame", function(Color)
-   local ScrollFrame = Create("ScrollingFrame", {
-    BackgroundTransparency = 1,
-    MidImage = "rbxassetid://7445543667",
-    BottomImage = "rbxassetid://7445543667",
-    TopImage = "rbxassetid://7445543667",
-    ScrollBarImageColor3 = Color,
-    BorderSizePixel = 0,
-    ScrollBarThickness = 0,
-    CanvasSize = UDim2.new(0, 0, 0, 0),
-   })
-   return ScrollFrame
-  end)
+-- ESP (Box)
+local espEnabled = false
+local espBoxes = {}
+local targetNames = {"partesp", "playercharacterlocationdetector"}
+local function IsTarget(obj)
+	if not obj:IsA("BasePart") then return false end
+	for _, name in pairs(targetNames) do
+		if string.lower(obj.Name) == string.lower(name) then return true end
+	end
+	return false
+end
 
-  CreateElement("Image", function(ImageID)
-   local ImageNew = Create("ImageLabel", {Image = ImageID, BackgroundTransparency = 1})
-   if GetOrionIcon(ImageID) ~= nil then ImageNew.Image = GetOrionIcon(ImageID) end 
-   return ImageNew
-  end)
+PlayerESP:AddToggle("BoxESPWhite", {
+	Text = "PCLD View",
+	Default = false,
+	Callback = function(Value)
+		espEnabled = Value
+		if Value then
+			for _, obj in ipairs(Workspace:GetDescendants()) do
+				if IsTarget(obj) then
+					local box = Instance.new("BoxHandleAdornment")
+					box.Adornee = obj
+					box.AlwaysOnTop = true
+					box.Color3 = Color3.fromRGB(255, 255, 255)
+					box.Transparency = 0.5
+					box.Size = obj.Size
+					box.Parent = CoreGui
+					espBoxes[obj] = box
+				end
+			end
+			Workspace.DescendantAdded:Connect(function(obj)
+				if espEnabled and IsTarget(obj) then
+					local box = Instance.new("BoxHandleAdornment")
+					box.Adornee = obj
+					box.AlwaysOnTop = true
+					box.Color3 = Color3.fromRGB(255, 255, 255)
+					box.Transparency = 0.5
+					box.Size = obj.Size
+					box.Parent = CoreGui
+					espBoxes[obj] = box
+				end
+			end)
+		else
+			for obj, box in pairs(espBoxes) do
+				if box then box:Destroy() end
+			end
+			espBoxes = {}
+		end
+	end
+})
 
-  CreateElement("ImageButton", function(ImageID)
-   local Image = Create("ImageButton", {Image = ImageID, BackgroundTransparency = 1})
-   return Image
-  end)
+-- Nickname ESP
+PlayerESP:AddToggle("NicknameESP", {
+	Text = "Nickname Esp",
+	Default = false,
+	Callback = function(Value)
+		if Value then
+			for _, plr in pairs(PS:GetPlayers()) do
+				if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+					local hrp = plr.Character.HumanoidRootPart
+					if not hrp:FindFirstChild("NameESP") then
+						local bg = Instance.new("BillboardGui", hrp)
+						bg.Name = "NameESP"
+						bg.Adornee = hrp
+						bg.Size = UDim2.new(0, 100, 0, 30)
+						bg.StudsOffset = Vector3.new(0, 3, 0)
+						bg.AlwaysOnTop = true
+						local tl = Instance.new("TextLabel", bg)
+						tl.Size = UDim2.new(1, 0, 1, 0)
+						tl.BackgroundTransparency = 1
+						tl.Text = plr.Name
+						tl.TextColor3 = Color3.fromRGB(255, 255, 255)
+						tl.TextScaled = true
+					end
+				end
+			end
+		else
+			for _, plr in pairs(PS:GetPlayers()) do
+				if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+					local hrp = plr.Character.HumanoidRootPart
+					if hrp:FindFirstChild("NameESP") then hrp.NameESP:Destroy() end
+				end
+			end
+		end
+	end
+})
 
-  CreateElement("Label", function(Text, TextSize, Transparency)
-   local Label = Create("TextLabel", {
-    Text = Text or "",
-    TextColor3 = Color3.fromRGB(240, 240, 240),
-    TextTransparency = Transparency or 0,
-    TextSize = TextSize or 15,
-    Font = Enum.Font.Gotham,
-    RichText = true,
-    BackgroundTransparency = 1,
-    TextXAlignment = Enum.TextXAlignment.Left
-   })
-   return Label
-  end)
+-- Dreamy Night Shader
+local dreamyEffects = nil
+PlayerEnv:AddToggle("DreamyNightShaderToggle", {
+	Text = "Dreamy Night Shader",
+	Default = false,
+	Callback = function(on)
+		local Lighting = game:GetService("Lighting")
+		if not dreamyEffects then
+			local Blur = Instance.new("BlurEffect", Lighting)
+			Blur.Size = 6
+			local Bloom = Instance.new("BloomEffect", Lighting)
+			Bloom.Intensity = 1.6
+			Bloom.Size = 90
+			Bloom.Threshold = 1.4
+			local Color = Instance.new("ColorCorrectionEffect", Lighting)
+			Color.Brightness = 0.15
+			Color.Contrast = -0.1
+			Color.Saturation = 0.25
+			Color.TintColor = Color3.fromRGB(210, 220, 255)
+			local SunRays = Instance.new("SunRaysEffect", Lighting)
+			SunRays.Intensity = 0.05
+			SunRays.Spread = 0.6
+			local Atmosphere = Instance.new("Atmosphere", Lighting)
+			Atmosphere.Density = 0.45
+			Atmosphere.Offset = 0.1
+			Atmosphere.Color = Color3.fromRGB(180, 190, 255)
+			Atmosphere.Decay = Color3.fromRGB(120, 130, 180)
+			Atmosphere.Glare = 0.15
+			Atmosphere.Haze = 3
+			dreamyEffects = {Blur, Bloom, Color, SunRays, Atmosphere}
+		end
+		for _, effect in pairs(dreamyEffects) do effect.Enabled = on end
+		if on then
+			Lighting.ClockTime = 0.5
+			Lighting.GlobalShadows = false
+			Lighting.Brightness = 2
+		end
+	end
+})
 
- local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
-  SetProps(MakeElement("List"), {
-   HorizontalAlignment = Enum.HorizontalAlignment.Center,
-   SortOrder = Enum.SortOrder.Name,
-   VerticalAlignment = Enum.VerticalAlignment.Bottom,
-   Padding = UDim.new(0, 5)
-  })
- }), {
-  Position = UDim2.new(1, -25, 1, -25),
-  Size = UDim2.new(0, 300, 1, -25),
-  AnchorPoint = Vector2.new(1, 1),
-  Parent = Orion
- })
+-- Boost FPS
+local oldProperties = {}
+PlayerPerf:AddButton({
+	Text = "Boost FPS",
+	Func = function()
+		local Lighting = game:GetService("Lighting")
+		for _, v in pairs(Workspace:GetDescendants()) do
+			if v:IsA("BasePart") then
+				if not oldProperties[v] then oldProperties[v] = {Material = v.Material, Reflectance = v.Reflectance, CastShadow = v.CastShadow} end
+				v.Material = Enum.Material.Plastic
+				v.Reflectance = 0
+				v.CastShadow = false
+			elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+				if not oldProperties[v] then oldProperties[v] = {Enabled = v.Enabled} end
+				v.Enabled = false
+			end
+		end
+		for _, plr in pairs(PS:GetPlayers()) do
+			if plr.Character then
+				for _, part in pairs(plr.Character:GetDescendants()) do
+					if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+						if not oldProperties[part] then oldProperties[part] = {Material = part.Material, Reflectance = part.Reflectance, CastShadow = part.CastShadow} end
+						part.Material = Enum.Material.Plastic
+						part.Reflectance = 0
+						part.CastShadow = false
+					end
+				end
+			end
+		end
+		if not oldProperties["Lighting"] then
+			oldProperties["Lighting"] = {GlobalShadows = Lighting.GlobalShadows, FogEnd = Lighting.FogEnd, Brightness = Lighting.Brightness}
+		end
+		Lighting.GlobalShadows = false
+		Lighting.FogEnd = 100000
+		Lighting.Brightness = 2
+	end
+})
 
- function OrionLib:MakeNotification(NotificationConfig)
-  spawn(function()
-   NotificationConfig.Name = NotificationConfig.Name or "Notification"
-   NotificationConfig.Co
+PlayerPerf:AddButton({
+	Text = "Restore FPS",
+	Func = function()
+		local Lighting = game:GetService("Lighting")
+		for obj, props in pairs(oldProperties) do
+			if obj and obj.Parent then
+				for prop, value in pairs(props) do obj[prop] = value end
+			elseif obj == "Lighting" then
+				for prop, value in pairs(props) do Lighting[prop] = value end
+			end
+		end
+		oldProperties = {}
+	end
+})
 
-ntent = NotificationConfig.Content or "Content"
-   NotificationConfig.Image = NotificationConfig.Image or "rbxassetid://4384403532"
-   NotificationConfig.Time = NotificationConfig.Time or 15
-   NotificationConfig.Color = NotificationConfig.Color or Color3.fromRGB(100, 100, 100)
-   NotificationConfig.TextColor = NotificationConfig.TextColor or Color3.fromRGB(255, 255, 255)
+-- =====================================================
+-- MISC TAB (полностью)
+-- =====================================================
+local MiscGroup = Tabs.Misc:AddLeftGroupbox("Miscellaneous")
 
-   local NotificationParent = SetProps(MakeElement("TFrame"), {
-    Size = UDim2.new(0.8, 0, 0, 0),
-    AutomaticSize = Enum.AutomaticSize.Y,
-    Parent = NotificationHolder
-   })
+-- FOV
+MiscGroup:AddSlider("FOVSlider", {
+	Text = "FOV",
+	Default = 90,
+	Min = 1,
+	Max = 120,
+	Rounding = 0,
+	Suffix = "°",
+	Callback = function(value) Camera.FieldOfView = value end
+})
 
-   local NotificationFrame = SetChildren(SetProps(MakeElement("RoundFrame", NotificationConfig.Color, 0, 8), {
-    Parent = NotificationParent, 
-    Size = UDim2.new(1, 0, 0, 0),
-    Position = UDim2.new(1, -55, 0, 0),
-    BackgroundTransparency = 0.4,
-    AutomaticSize = Enum.AutomaticSize.Y
-   }), {
-    MakeElement("Padding", 12, 12, 12, 12),
-    SetProps(MakeElement("Image", GetLucideIcon(NotificationConfig.Image)), {
-     Size = UDim2.new(0, 20, 0, 20),
-     ImageColor3 = NotificationConfig.TextColor,
-     Name = "Icon",
-     BackgroundTransparency = 1,
-    }),
-    SetProps(MakeElement("Label", NotificationConfig.Name, 15), {
-     Size = UDim2.new(1, -30, 0, 20),
-     Position = UDim2.new(0, 30, 0, 0),
-     Font = Enum.Font.GothamBold,
-     TextSize = 15,
-     Name = "Title",
-     BackgroundTransparency = 1,
-     TextColor3 = NotificationConfig.TextColor,
-    }),
-    SetProps(MakeElement("Label", NotificationConfig.Content, 14), {
-     Size = UDim2.new(1, 0, 0, 0),
-     Position = UDim2.new(0, 0, 0, 25),
-     Font = Enum.Font.GothamSemibold,
-     TextSize = 13,
-     Name = "Content",
-     AutomaticSize = Enum.AutomaticSize.Y,
-     TextColor3 = NotificationConfig.TextColor,
-     TextWrapped = true,
-     BackgroundTransparency = 1,
-    })
-   })
+-- Ignore House Barriers
+MiscGroup:AddToggle("NoBarrierCollision", {
+	Text = "Ignore House Barriers",
+	Default = false,
+	Callback = function(Value)
+		local plots = workspace:FindFirstChild("Plots")
+		if not plots then return end
+		for _, plot in pairs(plots:GetChildren()) do
+			local barrier = plot:FindFirstChild("Barrier")
+			if barrier then
+				for _, obj in pairs(barrier:GetDescendants()) do
+					if obj:IsA("BasePart") then obj.CanCollide = not Value end
+				end
+			end
+		end
+	end
+})
 
-   TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 40, 0, 0)}):Play()
+-- Auto Reset
+local autoResetEnabled = false
+MiscGroup:AddToggle("AutoResetToggle", {
+	Text = "Auto Reset",
+	Default = false,
+	Callback = function(on)
+		autoResetEnabled = on
+		if on then
+			task.spawn(function()
+				while autoResetEnabled do
+					local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+					if hum and hum.Health > 0 then hum.Health = 0 end
+					task.wait(0.5)
+				end
+			end)
+		end
+	end
+})
 
-   wait(NotificationConfig.Time - 0.88)
-   TweenService:Create(NotificationFrame.Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
-   TweenService:Create(NotificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.6}):Play()
-   wait(0.3)
-   TweenService:Create(NotificationFrame.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
-   TweenService:Create(NotificationFrame.Content, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.5}):Play()
-   wait(0.05)
+-- Trigger Bot
+local Triggerbot = {
+	Enabled = false,
+	Connection = nil,
+	canGrab = true,
+	maxDistance = 20,
+	lastTarget = nil,
+}
+local rayParams = RaycastParams.new()
+rayParams.FilterType = Enum.RaycastFilterType.Exclude
 
-   NotificationFrame:TweenPosition(UDim2.new(1, 60, 0, 0),'In','Quint',0.8,true)
-   wait(0.85)
-   NotificationParent:Destroy()
-  end)
- end    
+function Triggerbot:GetTarget()
+	local c = LocalPlayer.Character
+	if not c or not c:FindFirstChild("HumanoidRootPart") then return end
+	local origin, dir = Camera.CFrame.Position, Camera.CFrame.LookVector
+	rayParams.FilterDescendantsInstances = {c, Workspace.Terrain}
+	local result = Workspace:Raycast(origin, dir * 1000, rayParams)
+	if not result then return end
+	local model = result.Instance:FindFirstAncestorOfClass("Model")
+	if not model or model == c then return end
+	local hum = model:FindFirstChildOfClass("Humanoid")
+	if not hum or hum.Health <= 0 then return end
+	local root = model:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+	local dist = (c.HumanoidRootPart.Position - root.Position).Magnitude
+	if dist > self.maxDistance then return end
+	return model
+end
 
- function OrionLib:MakeWindow(WindowConfig)
-  -- Config --
-   local FirstTab = true
-   local Minimized = false
-   local Loaded = false
-   local UIHidden = false
-   local Tab = ""
+function Triggerbot:OnHeartbeat()
+	if not self.Enabled or not self.canGrab then return end
+	local t = self:GetTarget()
+	if t then self.lastTarget = t end
+	if not self.lastTarget then return end
+	local c = LocalPlayer.Character
+	local root = self.lastTarget:FindFirstChild("HumanoidRootPart")
+	if not c or not root then return end
+	if (c.HumanoidRootPart.Position - root.Position).Magnitude > self.maxDistance then
+		self.lastTarget = nil
+		return
+	end
+	self.canGrab = false
+	task.spawn(function()
+		task.wait(0.00001)
+		local screen = Camera.ViewportSize
+		local center = screen / 2
+		UserInputService.InputBegan:Fire({
+			Position = center,
+			UserInputType = Enum.UserInputType.Touch
+		})
+		task.wait(0.05)
+		UserInputService.InputEnded:Fire({
+			Position = center,
+			UserInputType = Enum.UserInputType.Touch
+		})
+		task.wait(0.05)
+		self.canGrab = true
+		self.lastTarget = nil
+	end)
+end
 
-   WindowConfig = WindowConfig or {}
-   WindowConfig.Name = WindowConfig.Name or "Better Orion"
-   WindowConfig.SubName = WindowConfig.SubName or ""
-   WindowConfig.Size = WindowConfig.Size or UDim2.fromOffset(600, 400)
-   WindowConfig.MinSize = WindowConfig.MinSize or UDim2.fromOffset(400, 200)
-   WindowConfig.MaxSize = WindowConfig.MaxSize or UDim2.fromOffset(4000, 2000)
-   WindowConfig.Theme = WindowConfig.Theme or "Default"
-   WindowConfig.IntroEnabled = WindowConfig.IntroEnabled or false
-   WindowConfig.IntroText = WindowConfig.IntroText or "Better Orion"
-   WindowConfig.ShowIcon = WindowConfig.ShowIcon or false
-   WindowConfig.Icon = GetLucideIcon(WindowConfig.Icon) or ""
-   WindowConfig.IntroIcon = GetLucideIcon(WindowConfig.IntroIcon) or ""
-   WindowConfig.Transparency = WindowConfig.Transparency or 0
-   WindowConfig.ElementsTransparency = WindowConfig.ElementsTransparency or 0
-   WindowConfig.ToggleUIKey = WindowConfig.ToggleUIKey or Enum.KeyCode.Tab
+MiscGroup:AddToggle("TriggerbotToggle", {
+	Text = "Trigger Bot",
+	Default = false,
+	Callback = function(value)
+		Triggerbot.Enabled = value
+		if value and not Triggerbot.Connection then
+			Triggerbot.Connection = R.Heartbeat:Connect(function() Triggerbot:OnHeartbeat() end)
+		elseif not value and Triggerbot.Connection then
+			Triggerbot.Connection:Disconnect()
+			Triggerbot.Connection = nil
+		end
+	end
+})
 
-  -- Elements
-   local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255)), {
-    Size = UDim2.fromScale(1, 1),
-    BackgroundTransparency = 1,
-   }), {
-    MakeElement("List"),
-    MakeElement("Padding", 8, 0, 0, 8)
+-- Packet Lag
+local PacketSpamAmount = 100
+MiscGroup:AddSlider("PacketAmountSlider", {
+	Text = "Packet Lag Amount",
+	Default = 100,
+	Min = 10,
+	Max = 5000,
+	Rounding = 0,
+	Callback = function(Value) PacketSpamAmount = Value end
+})
 
-}), "Divider")
+MiscGroup:AddToggle("PacketLagToggle", {
+	Text = "Packet Lag",
+	Default = false,
+	Callback = function(Value)
+		_G.PacketLagActive = Value
+		if Value then
+			task.spawn(function()
+				for _, e in pairs(PS:GetPlayers()) do
+					if e.Name == "MaybeFlashh" then return end
+				end
+				local GrabEvent = RS:WaitForChild("GrabEvents"):WaitForChild("ExtendGrabLine")
+				while _G.PacketLagActive do
+					pcall(function() GrabEvent:FireServer(string.rep("Balls ", PacketSpamAmount)) end)
+					task.wait()
+				end
+			end)
+		end
+	end
+})
 
-   AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-    TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
-   end)
+-- =====================================================
+-- BUILD TAB (полностью)
+-- =====================================================
+local BuildGroup = Tabs.Build:AddLeftGroupbox("Build")
 
-   local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
-    Size = UDim2.new(0.5, 0, 1, 0),
-    Position = UDim2.new(0.5, 0, 0, 0),
-    BackgroundTransparency = 1
-   }), {
-    AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
-     Position = UDim2.new(0, 9, 0, 6),
-     Size = UDim2.new(0, 18, 0, 18),
-    }), "Text")
-   })
+-- Heart Sparkler
+local heartActive = false
+local heartConnection = nil
+local heartToy = nil
+BuildGroup:AddToggle("HeartSparklerBuild", {
+	Text = "Heart",
+	Default = false,
+	Callback = function(on)
+		heartActive = on
+		if on then
+			task.spawn(function()
+				local char = LocalPlayer.Character
+				local hrp = char and char:FindFirstChild("HumanoidRootPart")
+				if not hrp then return end
+				
+				pcall(function() RS.MenuToys.SpawnToyRemoteFunction:InvokeServer("FireworkSparkler", hrp.CFrame * CFrame.new(0, 50, 0), Vector3.zero) end)
+				local folder = workspace:WaitForChild(LocalPlayer.Name .. "SpawnedInToys", 5)
+				if not folder then return end
+				heartToy = folder:WaitForChild("FireworkSparkler", 5)
+				if not heartToy then return end
+				
+				local part = heartToy:FindFirstChild("Handle") or heartToy:FindFirstChildWhichIsA("BasePart")
+				if not part then return end
+				
+				for _, v in pairs(heartToy:GetDescendants()) do
+					if v:IsA("BasePart") then
+						v.Anchored = false
+						v.CanCollide = false
+						v.Massless = true
+					end
+				end
+				part:BreakJoints()
+				
+				local bp = Instance.new("BodyPosition", part)
+				bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+				bp.P = 20000
+				bp.D = 500
+				
+				local bg = Instance.new("BodyGyro", part)
+				bg.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+				bg.P = 3000
+				
+				local t = 0
+				heartConnection = R.Heartbeat:Connect(function(dt)
+					if not heartActive or not part.Parent then
+						heartConnection:Disconnect()
+						if heartToy then heartToy:Destroy() end
+						return
+					end
+					local currentHrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+					if not currentHrp then return end
+					
+					pcall(function() RS.GrabEvents.SetNetworkOwner:FireServer(part, part.CFrame) end)
+					t = t + (8 * dt)
+					local scale = 1.5
+					local x = 16 * math.sin(t) ^ 3
+					local y = 13 * math.cos(t) - 5 * math.cos(2*t) - 2 * math.cos(3*t) - math.cos(4*t)
+					local relPos = Vector3.new(x * scale, (y * scale) + 25, 3)
+					bp.Position = currentHrp.CFrame:PointToWorldSpace(relPos)
+					bg.CFrame = currentHrp.CFrame
+				end)
+			end)
+		else
+			if heartConnection then heartConnection:Disconnect() end
+			if heartToy then heartToy:Destroy() end
+		end
+	end
+})
 
-   local MinimizeBtn = SetChildren(SetProps(MakeElement("Button"), {
-    Size = UDim2.new(0.5, 0, 1, 0),
-    BackgroundTransparency = 1
-   }), {
-    AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072719338"), {
-     Position = UDim2.new(0, 9, 0, 6),
-     Size = UDim2.new(0, 18, 0, 18),
-     Name = "Ico"
-    }), "Text")
-   })
+-- =====================================================
+-- FUN TAB (полностью)
+-- =====================================================
+local FanGroup = Tabs.Fun:AddLeftGroupbox("Troll")
 
-   local DragPoint = SetProps(MakeElement("TFrame"), {
-    Size = UDim2.new(1, 0, 0, 50),
-    BackgroundTransparency = 1
-   })
+-- Jerk Off Animation
+local playJerkOffActive = false
+local jerkOffAnimTrack = nil
+local jerkOffAnimId = "rbxassetid://168268306"
 
-   local ResizePoint = SetProps(MakeElement("RoundFrame", Color3.fromRGB(20, 20, 20), 0, 10), {
-    Size = UDim2.new(0, 12, 0, 30),
-    Position = UDim2.new(1, -12, 1, -30),
-    BackgroundTransparency = 0.9
-   })
+local function startJerkOff()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local animator = hum:FindFirstChildOfClass("Animator")
+	if not animator then
+		animator = Instance.new("Animator")
+		animator.Parent = hum
+	end
+	local anim = Instance.new("Animation")
+	anim.AnimationId = jerkOffAnimId
+	jerkOffAnimTrack = animator:LoadAnimation(anim)
+	jerkOffAnimTrack.Priority = Enum.AnimationPriority.Action
+	jerkOffAnimTrack:Play()
+	
+	task.spawn(function()
+		while playJerkOffActive do
+			task.wait(0.1)
+			if jerkOffAnimTrack and jerkOffAnimTrack.IsPlaying then
+				jerkOffAnimTrack.TimePosition = 0.3
+			end
+		end
+	end)
+end
 
-   local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
-    Size = UDim2.new(0.2, 0, 1, -50),
-    Position = UDim2.new(0, 0, 0, 50),
-    BackgroundTransparency = 1,
-   }), {
-    AddThemeObject(SetProps(MakeElement("Frame"), {
-     Size = UDim2.new(1, 0, 0, 10),
-     Position = UDim2.new(0, 0, 0, 0),
-     BackgroundTransparency = 1,
-    }), "Elements"), 
-    AddThemeObject(SetProps(MakeElement("Frame"), {
-     Size = UDim2.new(0, 10, 1, 0),
-     Position = UDim2.new(1, -10, 0, 0),
-     BackgroundTransparency = 1,
-    }), "Elements"), 
-    AddThemeObject(SetProps(MakeElement("Frame"), {
-     Size = UDim2.new(0, 1, 1, 0),
-     Position = UDim2.new(1, -1, 0, 0),
-     BackgroundTransparency = 1,
-    }), "Stroke"), 
-    TabHolder,
-   }), "Elements")
+local function stopJerkOff()
+	if jerkOffAnimTrack then
+		jerkOffAnimTrack:Stop()
+		jerkOffAnimTrack = nil
+	end
+end
 
-   local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
-    Size = UDim2.new(1, -30, 2, 0),
-    Position = UDim2.new(0, 25, 0, -24),
-    Font = Enum.Font.GothamBlack,
-    TextSize = 20,
-    Name = "WindowName",
-   }), "Text")
+FanGroup:AddToggle("JerkOffToggle", {
+	Text = "Jerk Off",
+	Default = false,
+	Callback = function(on)
+		playJerkOffActive = on
+		if on then startJerkOff() else stopJerkOff() end
+	end
+})
 
-   local WindowSubName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.SubName, 14), {
-    Size = UDim2.new(1, WindowName.TextBounds.X - 240, 1, 0),
-    Position = UDim2.new(0, WindowName.TextBounds.X + 140, 0, -18),
-    Font = Enum.Font.GothamSemibold,
-    TextSize = 14,
-    TextWrapped = true,
-    TextXAlignment = Enum.TextXAlignment.Center,
-    Name = "WindowSubName",
-   }), "TextDark")
+-- Bang Animation (Slow)
+local playBangActive = false
+local bangAnimTrack = nil
+local bangAnimId = "rbxassetid://148840371"
 
-   local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
-    Size = UDim2.new(1, 0, 0, 1),
-    Position = UDim2.new(0, 0, 1, -1),
-    BackgroundTransparency = 1,
-   }), "Stroke")
+local function startBang()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local animator = hum:FindFirstChildOfClass("Animator")
+	if not animator then
+		animator = Instance.new("Animator")
+		animator.Parent = hum
+	end
+	local anim = Instance.new("Animation")
+	anim.AnimationId = bangAnimId
+	bangAnimTrack = animator:LoadAnimation(anim)
+	bangAnimTrack.Priority = Enum.AnimationPriority.Action
+	bangAnimTrack:Play()
+	bangAnimTrack:AdjustSpeed(0.3)
+	
+	task.spawn(function()
+		while playBangActive do
+			task.wait(0.1)
+			if bangAnimTrack and bangAnimTrack.IsPlaying then
+				bangAnimTrack.TimePosition = 0.1
+			end
+		end
+	end)
+end
 
-   local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
-    Parent = Orion,
-    Position = UDim2.fromScale(0.3, 0),
-    Size = WindowConfig.Size,
-    ClipsDescendants = true,
-    BackgroundTransparency = WindowConfig.Transparency,
-   }), {
-    SetChildren(SetProps(MakeElement("TFrame"), {
-     Size = UDim2.new(1, 0, 0, 50),
-     Name = "TopBar",
-     BackgroundTransparency = 1,
-    }), {
-     WindowName,
-     WindowTopBarLine,
-     AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 7), {
-      Size = UDim2.new(0, 70, 0, 30),
-      Position = UDim2.new(1, -90, 0, 10),
-      BackgroundTransparency = 1,
-      Name = "ButtonsFrame",
-     }), {
-      AddThemeObject(MakeElement("Stroke"), "Stroke"),
-      AddThemeObject(SetProps(MakeElement("Frame"), {
-       Size = UDim2.new(0, 1, 1, 0),
-       Position = UDim2.new(0.5, 0, 0, 0),
-       BackgroundTransparency = 0,
-      }), "Stroke"), 
-      CloseBtn,
-      MinimizeBtn
-     }), "Elements"),
-     AddThemeObject(SetChildren(SetProps(MakeElement("TFrame", Color3.fr
+local function stopBang()
+	if bangAnimTrack then
+		bangAnimTrack:Stop()
+		bangAnimTrack = nil
+	end
+end
 
-omRGB(255, 255, 255), 0, 7), {
-      Size = UDim2.new(1, 0, 1, 0),
-      Position = UDim2.new(0, 0, 0, 20),
-      Name = "WindowNames",
-     }), {
-      WindowSubName,
-     }), "Elements"),
-    }),
-    SetProps(MakeElement("Button"), {
-     Size = UDim2.new(1, 0, 1, 0),
-     ZIndex = 0,
-    }),
-    DragPoint,
-    ResizePoint,
-    WindowStuff
-   }), "Main")
+FanGroup:AddToggle("BangToggle", {
+	Text = "Bang (Slow)",
+	Default = false,
+	Callback = function(on)
+		playBangActive = on
+		if on then startBang() else stopBang() end
+	end
+})
 
-  -- Local window functions
-   if WindowConfig.ShowIcon then
-    WindowName.Position = UDim2.new(0, 50, 0, -24)
-    local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0, 25, 0, 15), Name = "WindowIcon"})
-    WindowIcon.Parent = MainWindow.TopBar
-   end 
+-- Other Animations
+local AnimationsList = {
+	["Crazy"] = "rbxassetid://248263260",
+	["Insane"] = "rbxassetid://35654637",
+	["Collapse"] = "rbxassetid://35154961",
+	["Zombie"] = "rbxassetid://33796059",
+}
+local animEnabled = false
+local currentAnimTrack = nil
+local selectedAnimName = "Crazy"
 
-   local function AddDraggingFunctionality(DragPoint, Main)
-    pcall(function()
-     local Dragging, DragInput, MousePos, FramePos = false
-     DragPoint.InputBegan:Connect(function(Input)
-      if Input.UserInputType == Enum.UserInputType.MouseButton1  or Input.UserInputType == Enum.UserInputType.Touch then
-       Dragging = true
-       MousePos = Input.Position
-       FramePos = Main.Position
+local function playSelectedAnim()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local animator = hum:FindFirstChildOfClass("Animator")
+	if not animator then
+		animator = Instance.new("Animator")
+		animator.Parent = hum
+	end
+	if currentAnimTrack then currentAnimTrack:Stop() end
+	local anim = Instance.new("Animation")
+	anim.AnimationId = AnimationsList[selectedAnimName]
+	currentAnimTrack = animator:LoadAnimation(anim)
+	currentAnimTrack.Priority = Enum.AnimationPriority.Action
+	currentAnimTrack.Looped = true
+	currentAnimTrack:Play()
+end
 
-       Input.Changed:Connect(function()
-        if Input.UserInputState == Enum.UserInputState.End then Dragging = false end
-       end)
-      end
-     end)
-     DragPoint.InputChanged:Connect(function(Input)
-      if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then DragInput = Input end
-     end)
-     UserInputService.InputChanged:Connect(function(Input)
-      if Input == DragInput and Dragging then
-       local Delta = Input.Position - MousePos
-       TweenService:Create(Main, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
-      end
-     end)
-    end)
-   end   
+local function stopSelectedAnim()
+	if currentAnimTrack then currentAnimTrack:Stop() end
+end
 
-   local function AddResizingFunctionality(ResizePoint, Main)
-    pcall(function()  
-     local Dragging, DragInput, MousePos, FrameSize = false
-     ResizePoint.InputBegan:Connect(function(Input)
-      if Input.UserInputType == Enum.UserInputType.MouseButton1  or Input.UserInputType == Enum.UserInputType.Touch then
-       Dragging = true
-       MousePos = Input.Position
-       FrameSize = Main.Size
+FanGroup:AddToggle("AnimToggle", {
+	Text = "Play Animation",
+	Default = false,
+	Callback = function(on)
+		animEnabled = on
+		if on then playSelectedAnim() else stopSelectedAnim() end
+	end
+})
 
-       Input.Changed:Connect(function()
-        if Input.UserInputState == Enum.UserInputState.End then Dragging = false end
-       end)
-      end
-     end)
-     ResizePoint.InputChanged:Connect(function(Input)
-      if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then DragInput = Input end
-     end)
-     UserInputService.InputChanged:Connect(function(Input)
-      if Input == DragInput and Dragging then
-       local Delta = Input.Position - MousePos
-       local size = UDim2.new(
-        FrameSize.X.Scale, math.clamp(FrameSize.X.Offset + Delta.X, WindowConfig.MinSize.X.Offset, WindowConfig.MaxSize.X.Offset),
-        FrameSize.Y.Scale, math.clamp(FrameSize.Y.Offset + Delta.Y, WindowConfig.MinSize.Y.Offset, WindowConfig.MaxSize.Y.Offset)
-       )
-       TweenService:Create(Main, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = size}):Play()
-       WindowConfig.Size = size
-      end
-     end)
-    end)
-   end
+FanGroup:AddDropdown("AnimSelect", {
+	Text = "Animation",
+	Values = {"Crazy", "Insane", "Collapse", "Zombie"},
+	Default = 1,
+	Callback = function(v)
+		selectedAnimName = v
+		if animEnabled then playSelectedAnim() end
+	end
+})
 
-   AddDraggingFunctionality(DragPoint, MainWindow)
-   AddResizingFunctionality(ResizePoint, MainWindow)
+-- Fake Death
+FanGroup:AddToggle("FakeDeathToggle", {
+	Text = "Fake Death",
+	Default = false,
+	Callback = function(on)
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if not hum then return end
+		if on then
+			hum:ChangeState(Enum.HumanoidStateType.Physics)
+			hum.PlatformStand = true
+		else
+			hum.PlatformStand = false
+			hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+		end
+	end
+})
 
-  -- Local window connections
-   AddConnection(CloseBtn.MouseButton1Up, function()
-    MainWindow.Visible = false
-    UIHidden = true
-    OrionLib:MakeNotification({
-     Name = "Interface Hidden",
-     Content = "Tap "..tostring(WindowConfig.ToggleUIKey):split(".")[3].." to reopen the interface",
-     Time = 3,
-     Color = game.CoreGui.BetterOrion:GetChildren()[2].BackgroundColor3,
-     TextColor = game.CoreGui.BetterOrion:GetChildren()[2].TopBar.WindowName.TextColor3,
-     Image = "activity"
-    })
-    WindowConfig.CloseCallback()
-   end)
+-- Follow & Stare
+local followActive = false
+FanGroup:AddToggle("FollowStare", {
+	Text = "Follow & Stare",
+	Default = false,
+	Callback = function(on)
+		followActive = on
+		if on then
+			task.spawn(function()
+				while followActive do
+					local target = PS:GetPlayers()[math.random(#PS:GetPlayers())]
+					if target ~= LocalPlayer and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+						local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+						local thrp = target.Character.HumanoidRootPart
+						if hrp and thrp then
+							hrp.CFrame = CFrame.new(thrp.Position + thrp.CFrame.LookVector * -2, thrp.Position)
+						end
+					end
+					task.wait(0.3)
+				end
+			end)
+		end
+	end
+})
 
-   AddConnection(UserInputService.InputBegan, function(Input)
-    if Input.KeyCode == WindowConfig.ToggleUIKey then 
-     UIHidden = not UIHidden
-     MainWi
+-- Fake Lag
+local fakeLagConn
+FanGroup:AddToggle("FakeLagToggle", {
+	Text = "Fake Lag",
+	Default = false,
+	Callback = function(on)
+		if fakeLagConn then fakeLagConn:Disconnect() end
+		if not on then return end
+		fakeLagConn = R.Heartbeat:Connect(function()
+			local root = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+			if not root then return end
+			if math.random(1, 5) == 1 then
+				root.CFrame = root.CFrame * CFrame.new(math.random(-2, 2)/10, 0, math.random(-2, 2)/10)
+			end
+		end)
+	end
+})
 
-ndow.Visible = not UIHidden 
-    end
-   end)
+-- UFO Shuriken Stick
+FanGroup:AddToggle("UFOShurikenStick", {
+	Text = "Stick Shuriken to UFO",
+	Default = false,
+	Callback = function(state)
+		if not state then return end
+		task.spawn(function()
+			local StickyEvent = RS:WaitForChild("PlayerEvents"):WaitForChild("StickyPartEvent")
+			local SpawnRemote = RS.MenuToys:WaitForChild("SpawnToyRemoteFunction")
+			local CanSpawn = LocalPlayer:WaitForChild("CanSpawnToy")
+			local ToysFolder = workspace:WaitForChild(LocalPlayer.Name .. "SpawnedInToys")
+			local UFOs = {
+				workspace.Map.AlwaysHereTweenedObjects:FindFirstChild("InnerUFO"),
+				workspace.Map.AlwaysHereTweenedObjects:FindFirstChild("OuterUFO")
+			}
+			local function getHRP()
+				if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					return LocalPlayer.Character.HumanoidRootPart
+				end
+				return LocalPlayer.CharacterAdded:Wait():WaitForChild("HumanoidRootPart")
+			end
+			for i = 1, 12 do
+				local t = tick()
+				while not CanSpawn.Value do
+					if tick() - t > 5 then break end
+					task.wait(0.1)
+				end
+				local hrp = getHRP()
+				if hrp then
+					pcall(function()
+						SpawnRemote:InvokeServer("NinjaShuriken", hrp.CFrame * CFrame.new(0, 10, 15), Vector3.zero)
+					end)
+				end
+				task.wait(0.15)
+			end
+			task.wait(1)
+			for _, Toy in pairs(ToysFolder:GetChildren()) do
+				if Toy.Name == "NinjaShuriken" and Toy:FindFirstChild("StickyPart") then
+					for _, UFO in pairs(UFOs) do
+						if UFO and UFO:FindFirstChild("Object") and UFO.Object:FindFirstChild("ObjectModel") and UFO.Object.ObjectModel:FindFirstChild("Body") then
+							StickyEvent:FireServer(Toy.StickyPart, UFO.Object.ObjectModel.Body, CFrame.new())
+							local follow = UFO.Object:FindFirstChild("FollowThisPart")
+							if follow then
+								if follow:FindFirstChild("AlignOrientation") then follow.AlignOrientation.Enabled = false end
+								if follow:FindFirstChild("AlignPosition") then follow.AlignPosition.Enabled = false end
+							end
+						end
+					end
+				end
+			end
+		end)
+	end
+})
 
-   local VisibleContainers = {}
-   AddConnection(MinimizeBtn.MouseButton1Up, function()
-    if Minimized then
-     TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = WindowConfig.Size}):Play()
-     ResizePoint.Visible = true
-     MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
-     WindowSubName.Visible = true
-     wait(.02)
-     MainWindow.ClipsDescendants = false
-     WindowStuff.Visible = true
-     WindowTopBarLine.Visible = true
-     for i, v in pairs(VisibleContainers) do
-      v.Visible = true
-     end
-     VisibleContainers = {}
-    else
-     MainWindow.ClipsDescendants = true
-     WindowTopBarLine.Visible = false
-     MinimizeBtn.Ico.Image = "rbxassetid://7072720870"
+-- =====================================================
+-- KEYBINDS TAB (мобильные кнопки)
+-- =====================================================
+local KeybindsGroup = Tabs.Keybinds:AddLeftGroupbox("Keybinds")
 
-     TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, WindowName.TextBounds.X + 140, 0, 50)}):Play()
-     WindowSubName.Visible = false
-     ResizePoint.Visible = false
-     wait(0.1)
-     WindowStuff.Visible = false
-     for i, Container in pairs(MainWindow:GetChildren()) do
-      if Container.Name == "ItemContainerLeft" or Container.Name == "ItemContainerRight" then
-       if Container.Visible then
-        Container.Visible = false
-        table.insert(VisibleContainers, Container)
-       end
-      end
-     end
-    end
-    Minimized = not Minimized    
-   end)
-   local function LoadSequence()
-    MainWindow.Visible = false
-    local LoadSequenceLogo = SetProps(MakeElement("Image", WindowConfig.IntroIcon), {
-     Parent = Orion,
-     AnchorPoint = Vector2.new(0.5, 0.5),
-     Position = UDim2.new(0.5, 0, 0.4, 0),
-     …
+-- Teleport to Mouse (Mobile)
+local tpEnabled = true
+KeybindsGroup:AddLabel("Teleport Tool"):AddKeyPicker("TPKeybind", {
+	Default = "X",
+	Text = "Teleport",
+	NoUI = false,
+	Callback = function()
+		if not tpEnabled then return end
+		local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			local pos = Camera.CFrame.Position + Camera.CFrame.LookVector * 15
+			hrp.CFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
+		end
+	end
+})
+
+-- Sit on Blobman
+KeybindsGroup:AddLabel("Blobman"):AddKeyPicker("SitBlobmanKey", {
+	Default = "Z",
+	Text = "Sit on Blobman",
+	NoUI = false,
+	Callback = function()
+		local char = LocalPlayer.Character
+		local hum = char and char:FindFirstChildOfClass("Humanoid")
+		local hrp = char and char:FindFirstChild("HumanoidRootPart")
+		if not hum or not hrp then return end
+		if hum.SeatPart then return end
+		local nearest, dist = nil, 40
+		for _, model in ipairs(Workspace:GetDescendants()) do
+			if model:IsA("Model") and model.Name == "CreatureBlobman" then
+				local root = model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
+				if root then
+					local d = (root.Position - hrp.Position).Magnitude
+					if d < dist then dist = d; nearest = model end
+				end
+			end
+		end
+		if nearest then
+			local seat = nearest:FindFirstChildWhichIsA("Seat", true) or nearest:FindFirstChildWhichIsA("VehicleSeat", true)
+			if seat then
+				hrp.CFrame = seat.CFrame * CFrame.new(0, 1.2, -1)
+				task.wait(0.05)
+				pcall(function() seat:Sit(hum) end)
+			end
+		end
+	end
+})
+
+-- =====================================================
+-- NOTIFICATIONS TAB
+-- =====================================================
+local NotifGroup = Tabs.Notifications:AddLeftGroupbox("Notifications")
+
+-- =====================================================
+-- AURAS TAB (полностью)
+-- =====================================================
+local AurasGroup = Tabs.Auras:AddLeftGroupbox("Auras")
+
+-- Remove Anti Kick Aura
+local removeAntiKickAuraActive = false
+local removeAntiKickAuraConnection = nil
+local removeAntiKickRadius = 15
+local useWhitelistRemoveAntiKick = true
+
+AurasGroup:AddDropdown("RemoveAntiKickAuraRadiusDropdown", {
+	Text = "Anti Kick Aura Radius",
+	Values = {"10", "12", "14", "16", "18", "20"},
+	Default = "15",
+	Callback = function(value) removeAntiKickRadius = tonumber(value) end
+})
+
+AurasGroup:AddToggle("RemoveAntiKickAuraWhitelistToggle", {
+	Text = "Use Whitelist (Friends)",
+	Default = true,
+	Callback = function(on) useWhitelistRemoveAntiKick = on end
+})
+
+AurasGroup:AddToggle("RemoveAntiKickAuraToggle", {
+	Text = "Remove Anti Kick Aura",
+	Default = false,
+	Callback = function(on)
+		removeAntiKickAuraActive = on
+		if removeAntiKickAuraConnection then removeAntiKickAuraConnection:Disconnect() end
+		if not on then return end
+		
+		removeAntiKickAuraConnection = R.Heartbeat:Connect(function()
+			local myChar = LocalPlayer.Character
+			local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
+			if not myRoot then return end
+			local SetNetOwner = RS.GrabEvents.SetNetworkOwner
+			
+			for _, target in pairs(PS:GetPlayers()) do
+				if target ~= LocalPlayer then
+					local tChar = target.Character
+					local tRoot = tChar and tChar:FindFirstChild("HumanoidRootPart")
+					if not tRoot then continue end
+					if useWhitelistRemoveAntiKick and LocalPlayer:IsFriendsWith(target.UserId) then continue end
+					if (tRoot.Position - myRoot.Position).Magnitude <= removeAntiKickRadius then
+						local spawned = workspace:FindFirstChild(target.Name .. "SpawnedInToys")
+						if spawned then
+							for _, toyName in pairs({"NinjaKunai", "NinjaShuriken", "AntiKick"}) do
+								local toy = spawned:FindFirstChild(toyName)
+								if toy then
+									local part = toy:FindFirstChild("SoundPart")
+									if part then
+										pcall(function() SetNetOwner:FireServer(part, part.CFrame) end)
+										if part:FindFirstChild("PartOwner") and part.PartOwner.Value == LocalPlayer.Name then
+											part.CFrame = CFrame.new(0, 1000, 0)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end)
+	end
+})
+
+-- Dual Hand Kick Aura
+local dualKickAuraEnabled = false
+local dualKickAuraRadius = 20
+local dualKickAuraWhitelist = true
+local dualKickAuraConn = nil
+
+AurasGroup:AddDropdown("DualKickAuraRadius", {
+	Text = "Dual Kick Aura Radius",
+	Values = {"10", "20", "30", "40", "50"},
+	Default = 2,
+	Callback = function(v) dualKickAuraRadius = tonumber(v) end
+})
+
+AurasGroup:AddToggle("DualKickAuraWhitelist", {
+	Text = "Whitelist Friends",
+	Default = true,
+	Callback = function(v) dualKickAuraWhitelist = v end
+})
+
+local function canKick(plr)
+	if not dualKickAuraWhitelist then return true end
+	return not LocalPlayer:IsFriendsWith(plr.UserId)
+end
+
+AurasGroup:AddToggle("DualHandKickAura", {
+	Text = "Dual Hand Kick Aura",
+	Default = false,
+	Callback = function(on)
+		dualKickAuraEnabled = on
+		if dualKickAuraConn then dualKickAuraConn:Disconnect() end
+		if not on then return end
+		
+		dualKickAuraConn = R.Heartbeat:Connect(function()
+			local char = LocalPlayer.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			local seat = hum and hum.SeatPart
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+			if not (seat and root) then return end
+			
+			local blob = seat.Parent
+			local scriptObj = blob:FindFirstChild("BlobmanSeatAndOwnerScript")
+			local grab = scriptObj and scriptObj:FindFirstChild("CreatureGrab")
+			local drop = scriptObj and scriptObj:FindFirstChild("CreatureDrop")
+			local leftDet = blob:FindFirstChild("LeftDetector")
+			local rightDet = blob:FindFirstChild("RightDetector")
+			local leftWeld = leftDet and leftDet:FindFirstChild("LeftWeld")
+			local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+			
+			if not (grab and drop and leftDet and rightDet and leftWeld and rightWeld) then return end
+			
+			for _, plr in pairs(PS:GetPlayers()) do
+				if plr ~= LocalPlayer and plr.Character and canKick(plr) then
+					local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+					local tHum = plr.Character:FindFirstChildOfClass("Humanoid")
+					if tRoot and tHum and tHum.Health > 0 then
+						local dist = (tRoot.Position - root.Position).Magnitude
+						if dist <= dualKickAuraRadius then
+							pcall(function()
+								grab:FireServer(leftDet, tRoot, leftWeld)
+								task.wait(0.04)
+								drop:FireServer(leftWeld, tRoot)
+								grab:FireServer(rightDet, tRoot, rightWeld)
+								task.wait(0.04)
+								drop:FireServer(rightWeld, tRoot)
+								grab:FireServer(leftDet, tRoot, leftWeld)
+								grab:FireServer(rightDet, tRoot, rightWeld)
+								task.wait(0.03)
+								drop:FireServer(leftWeld, tRoot)
+								drop:FireServer(rightWeld, tRoot)
+							end)
+						end
+					end
+				end
+			end
+		end)
+	end
+})
+
+-- Kick Aura 1 Hand
+local kickAura1Enabled = false
+local kickAura1Radius = 20
+local kickAura1Whitelist = true
+local kickAura1Conn = nil
+
+AurasGroup:AddDropdown("KickAura1Radius", {
+	Text = "Kick Aura 1H Radius",
+	Values = {"10", "20", "30", "40", "50"},
+	Default = 2,
+	Callback = function(v) kickAura1Radius = tonumber(v) end
+})
+
+AurasGroup:AddToggle("KickAura1Whitelist", {
+	Text = "Whitelist Friends",
+	Default = true,
+	Callback = function(v) kickAura1Whitelist = v end
+})
+
+AurasGroup:AddToggle("KickAura1Toggle", {
+	Text = "Kick Aura 1 Hand",
+	Default = false,
+	Callback = function(on)
+		kickAura1Enabled = on
+		if kickAura1Conn then kickAura1Conn:Disconnect() end
+		if not on then return end
+		
+		kickAura1Conn = R.Heartbeat:Connect(function()
+			local char = LocalPlayer.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			local seat = hum and hum.SeatPart
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+			if not (seat and root) then return end
+			
+			local blob = seat.Parent
+			local scriptObj = blob:FindFirstChild("BlobmanSeatAndOwnerScript")
+			local grab = scriptObj and scriptObj:FindFirstChild("CreatureGrab")
+			local drop = scriptObj and scriptObj:FindFirstChild("CreatureDrop")
+			local rightDet = blob:FindFirstChild("RightDetector")
+			local rightWeld = rightDet and rightDet:FindFirstChild("RightWeld")
+			
+			if not (grab and drop and rightDet and rightWeld) then return end
+			
+			for _, plr in pairs(PS:GetPlayers()) do
+				if plr ~= LocalPlayer and plr.Character and (not kickAura1Whitelist or not LocalPlayer:IsFriendsWith(plr.UserId)) then
+					local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+					local tHum = plr.Character:FindFirstChildOfClass("Humanoid")
+					if tRoot and tHum and tHum.Health > 0 then
+						local dist = (tRoot.Position - root.Position).Magnitude
+						if dist <= kickAura1Radius then
+							pcall(function()
+								local weld = rightDet:FindFirstChild("RightWeld") or rightDet:FindFirstChildWhichIsA("Weld")
+								if weld then
+									drop:FireServer(weld)
+									grab:FireServer(rightDet, tRoot, rightWeld)
+								end
+							end)
+						end
+					end
+				end
+			end
+		end)
+	end
+})
+
+-- =====================================================
+-- BLACK HOLE KICK DETECT
+-- =====================================================
+local function playKickSound()
+	local s = Instance.new("Sound")
+	s.SoundId = "rbxassetid://79150789336480"
+	s.Volume = 5
+	s.PlayOnRemove = true
+	s.Parent = SoundService
+	s:Destroy()
+end
+
+local function getClosestPlayer(pos)
+	local closestPlr = nil
+	local closestDist = math.huge
+	for _, plr in pairs(PS:GetPlayers()) do
+		if plr ~= LocalPlayer and plr.Character then
+			local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
+			if hrp then
+				local dist = (hrp.Position - pos).Magnitude
+				if dist < closestDist then
+					closestDist = dist
+					closestPlr = plr
+				end
+			end
+		end
+	end
+	return closestPlr
+end
+
+Workspace.ChildAdded:Connect(function(obj)
+	if obj.Name == "BlackHoleKick" or obj.Name == "BlackHoleDetected" then
+		task.wait(0.05)
+		local pos
+		if obj:IsA("BasePart") then
+			pos = obj.Position
+		elseif obj:IsA("Model") and obj.PrimaryPart then
+			pos = obj.PrimaryPart.Position
+		end
+		if not pos then return end
+		local plr = getClosestPlayer(pos)
+		if not plr then return end
+		playKickSound()
+		notify("Kicked", plr.DisplayName .. " (" .. plr.Name .. ")", 6)
+	end
+end)
+
+-- =====================================================
+-- FRIEND JOIN NOTIFY
+-- =====================================================
+PS.PlayerAdded:Connect(function(plr)
+	if plr:IsFriendsWith(LocalPlayer.UserId) then
+		notify("Friend", plr.Name .. " joined", 5)
+	end
+end)
+
+-- =====================================================
+-- UI SETTINGS
+-- =====================================================
+local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
+MenuGroup:AddButton("Unload", function() Library:Unload() end)
+MenuGroup:AddLabel("Menu Keybind"):AddKeyPicker("MenuKeybind", {
+	Default = "RightShift",
+	NoUI = true,
+	Text = "Menu keybind"
+})
+
+Library.ToggleKeybind = Options.MenuKeybind
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({"MenuKeybind"})
+ThemeManager:SetFolder("Ragalic Mobile")
+SaveManager:SetFolder("Ragalic Mobile/Configs")
+SaveManager:BuildConfigSection(Tabs["UI Settings"])
+ThemeManager:ApplyToTab(Tabs["UI Settings"])
+
+-- =====================================================
+-- FINAL NOTIFY
+-- =====================================================
+notify("Ragalic Mobile", "100% functions loaded!", 3)
+print("Ragalic Mobile • Ready")
